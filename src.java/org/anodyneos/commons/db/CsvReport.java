@@ -222,11 +222,17 @@ public class CsvReport {
                 for (int i = 1; i <= column_count; i++) {
                     if ((o = rs.getObject(i)) != null) {
                         int colType = md.getColumnType(i);
+                        String colClass = md.getColumnClassName(i).toUpperCase();
                         if (o instanceof Number) {
                             out.writeField((Number) o);
-                        } else if (colType == Types.DATE || colType == Types.TIMESTAMP) {
-                            //out.writeField((rs.getTimestamp(i)).toString());
-                            out.writeField(isof.format(rs.getTimestamp(i)));
+                        } else if (colType == Types.DATE || colType == Types.TIMESTAMP || (colClass.indexOf("TIMESTAMP") != -1)) {
+                            Timestamp ts = rs.getTimestamp(i);
+                            if (null != ts) {
+                                //out.writeField(isof.format(rs.getTimestamp(i)));
+                                out.writeField((rs.getTimestamp(i)).toString());
+                            } else {
+                                out.endField();
+                            }
                         } else {
                             out.writeField(o.toString());
                         }
