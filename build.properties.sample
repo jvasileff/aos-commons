@@ -9,7 +9,7 @@ compile.debuglevel:lines,source
 ################################################################################
 
 ## ALL JARS FROM REPOSITORY:
-dir.jars=/opt/gx/repository/jars
+dir.jars=/opt/zeus/repository/jars
 
 ## JARS SPECIFIED INDIVIDUALLY:
 # xml-apis.jar=/path/to/jarfile
