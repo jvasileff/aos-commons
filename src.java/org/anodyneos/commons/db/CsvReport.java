@@ -233,6 +233,15 @@ public class CsvReport {
                             } else {
                                 out.endField();
                             }
+                        } else if (colType == Types.CLOB) {
+                            Clob c = rs.getClob(i);
+                            Reader r = c.getCharacterStream();
+                            char[] buff = new char[1024];
+                            int num;
+                            while (-1 != (num = r.read(buff))) {
+                                out.write(buff, 0, num);
+                            }
+                            r.close();
                         } else {
                             out.writeField(o.toString());
                         }
