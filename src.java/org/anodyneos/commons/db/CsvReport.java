@@ -270,6 +270,9 @@ public class CsvReport {
     }
 
     private class ReportException extends Exception {
+
+        private static final long serialVersionUID = 4051049661752095284L;
+
         ReportException(String message) {
             super(message);
         }

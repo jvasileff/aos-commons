@@ -88,10 +88,12 @@ import java.io.Serializable;
 * default port for a specific scheme). Rather, it only knows the
 * grammar and basic set of operations that can be applied to a URI.
 *
-* @version  $Id: URI.java,v 1.1 2004-05-13 04:42:44 jvas Exp $
+* @version  $Id: URI.java,v 1.2 2004-11-06 06:54:09 jvas Exp $
 *
 **********************************************************************/
  public class URI implements Serializable {
+
+    private static final long serialVersionUID = 3762817086594167861L;
 
   /*******************************************************************
   * MalformedURIExceptions are thrown in the process of building a URI
@@ -100,6 +102,8 @@ import java.io.Serializable;
   *
   ********************************************************************/
   public static class MalformedURIException extends IOException {
+
+    private static final long serialVersionUID = 3257850974029558578L;
 
    /******************************************************************
     * Constructs a <code>MalformedURIException</code> with no specified
