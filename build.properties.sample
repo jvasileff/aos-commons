@@ -1,6 +1,6 @@
 compile.deprecation:off
 compile.debug:true
-compile.debuglevel:lines,source
+compile.debuglevel:lines,source,vars
 
 ################################################################################
 ##
