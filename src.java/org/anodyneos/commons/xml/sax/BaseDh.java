@@ -13,6 +13,8 @@ public class BaseDh extends DefaultHandler {
     private ElementProcessor topProcessor;
     private Stack processorStack = new Stack();
 
+    private boolean namespaceContextPushed = false;
+
     public BaseDh (ElementProcessor topProcessor) {
         this.topProcessor = topProcessor;
         this.ctx = topProcessor.getContext();
@@ -20,6 +22,11 @@ public class BaseDh extends DefaultHandler {
 
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
+
+        if (! namespaceContextPushed) {
+            ctx.getNamespaceSupport().pushContext();
+        }
+        namespaceContextPushed = false;
 
         ElementProcessor oldProcessor;
         ElementProcessor newProcessor;
@@ -38,6 +45,7 @@ public class BaseDh extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         ElementProcessor processor = (ElementProcessor) processorStack.pop();
         processor.endElement(uri, localName, qName);
+        ctx.getNamespaceSupport().popContext();
     }
 
     public void characters(char[] chars, int start, int length) throws SAXException {
@@ -53,6 +61,12 @@ public class BaseDh extends DefaultHandler {
     }
 
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
+        if (! namespaceContextPushed) {
+            ctx.getNamespaceSupport().pushContext();
+            namespaceContextPushed = true;
+        }
+        ctx.getNamespaceSupport().declarePrefix(prefix, uri);
+
         if (! processorStack.empty()) {
             ElementProcessor processor = (ElementProcessor) processorStack.peek();
             processor.startPrefixMapping(prefix, uri);

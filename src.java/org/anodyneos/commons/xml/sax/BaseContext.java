@@ -3,11 +3,13 @@ package org.anodyneos.commons.xml.sax;
 import org.anodyneos.commons.net.URI;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
+import org.xml.sax.helpers.NamespaceSupport;
 
 public class BaseContext {
 
     private InputSource inputSource;
     private Locator locator;
+    private NamespaceSupport namespaceSupport = new NamespaceSupport();
 
     public BaseContext(InputSource inputSource) {
         this.inputSource = inputSource;
@@ -43,4 +45,10 @@ public class BaseContext {
         return locationURI;
     }
 
+    /**
+     * @return Returns the namespaceSupport maintained by BaseDh.
+     */
+    public NamespaceSupport getNamespaceSupport() {
+        return namespaceSupport;
+    }
 }
