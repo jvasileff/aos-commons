@@ -11,7 +11,6 @@
     <!-- setup -->
     <property name="build.sysclasspath"         value="ignore"/>
     <property name="file.depCache"              location="build/ant_depcache"/>
-    <property file="build.properties"/>
 
     <!-- properties -->
     <property name="dir.src.java"               location="src.java"/>
@@ -91,10 +90,10 @@
     +++++++++++++++++++++++++++++++++++++-->
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ~~  compile
+    ~~  compileJava
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-    <target name="compile.common" depends="prepare" description="Compile classes">
+    <target name="compileJava" depends="prepare">
         <!-- depend -->
         <property refid="path.source" name="srcpath"/>
         <depend srcdir="${srcpath}"
@@ -120,6 +119,7 @@
         </copy>
     </target>
 
+    <target name="compile.common" depends="compileJava"/>
     <target name="compile.pre"/>
     <target name="compile.post"/>
 
