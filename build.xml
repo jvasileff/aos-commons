@@ -20,6 +20,7 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <property name="xml-apis.jar" location="${dir.jars}/xalan-2.6.2/xml-apis.jar"/>
     <property name="resolver.jar" location="${dir.jars}/xml-commons-resolver-1.1/resolver.jar"/>
+    <property name="commons-logging.jar" location="${dir.jars}/commons-logging-1.0.3/commons-logging.jar"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  prepare.post
@@ -28,6 +29,7 @@
         <!-- ide.lib -->
         <copy toDir="${dir.build.ide.lib}" file="${xml-apis.jar}"/>
         <copy toDir="${dir.build.ide.lib}" file="${resolver.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${commons-logging.jar}"/>
 
         <!-- paths -->
         <path id="path.compile">
