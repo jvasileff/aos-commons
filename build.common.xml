@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+
+<!--****************************************************************************
+**
+**  COMMON TARGETS
+**
+*****************************************************************************-->
+
+<project name="aos-common" default="compile" basedir=".">
+
+    <!-- setup -->
+    <property name="build.sysclasspath"         value="ignore"/>
+    <property name="file.depCache"              location="build/ant_depcache"/>
+    <property file="build.properties"/>
+
+    <!-- properties -->
+    <property name="dir.src.java"               location="src.java"/>
+    <property name="dir.build"                  location="build"/>
+    <property name="dir.build.apidocs"          location="${dir.build}/apidocs"/>
+    <property name="dir.build.classes"          location="${dir.build}/classes"/>
+    <property name="dir.build.jar"              location="${dir.build}/jar"/>
+    <property name="dir.build.java"             location="${dir.build}/java"/>
+    <property name="dir.build.ide.classes"      location="${dir.build}/ide.classes"/>
+    <property name="dir.build.ide.lib"          location="${dir.build}/ide.lib"/>
+    <property name="file.jar"                   location="${dir.build.jar}/${ant.project.name}.jar"/>
+
+    <!-- patterns -->
+    <patternset id="pattern.resources">
+        <include name="**/*.html"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.png"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.xsl"/>
+        <include name="**/*.xsd"/>
+        <include name="**/*.css"/>
+        <include name="**/*.dtd"/>
+        <include name="**/*.js"/>
+        <include name="**/*.jsp"/>
+        <include name="**/*.properties"/>
+    </patternset>
+
+    <!-- paths -->
+    <path id="path.source">
+        <pathelement location="${dir.src.java}"/>
+        <pathelement location="${dir.build.java}"/>
+    </path>
+
+    <!--++++++++++++++++++++++++++++++++++++
+    ++
+    ++  PREPARE/CLEAN/MISC
+    ++
+    +++++++++++++++++++++++++++++++++++++-->
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  prepare
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="prepare.common">
+        <mkdir dir="${dir.build.apidocs}"/>
+        <mkdir dir="${dir.build.classes}"/>
+        <mkdir dir="${dir.build.jar}"/>
+        <mkdir dir="${dir.build.java}"/>
+        <mkdir dir="${dir.build.ide.classes}"/>
+        <mkdir dir="${dir.build.ide.lib}"/>
+    </target>
+
+    <target name="prepare.pre"/>
+    <target name="prepare.post"/>
+
+    <target name="prepare" depends="prepare.pre, prepare.common, prepare.post"/>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  clean
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="clean" description="Clean from previous builds">
+        <delete dir="${dir.build}"/>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  all
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="all" depends="clean,jar,apidocs" description="Clean, jar, apidocs"/>
+
+    <!--++++++++++++++++++++++++++++++++++++
+    ++
+    ++  COMPILE/JAR/APIDOCS
+    ++
+    +++++++++++++++++++++++++++++++++++++-->
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  compile
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="compile.common" depends="prepare" description="Compile classes">
+        <!-- depend -->
+        <property refid="path.source" name="srcpath"/>
+        <depend srcdir="${srcpath}"
+                destdir="${dir.build.classes}"
+                cache="${file.depCache}"
+                closure="yes">
+        </depend>
+
+        <!-- compile -->
+        <javac  destdir="${dir.build.classes}"
+                deprecation="${compile.deprecation}"
+                debug="${compile.debug}"
+                debuglevel="${compile.debuglevel}">
+            <src refid="path.source"/>
+            <classpath refid="path.compile"/>
+        </javac>
+
+        <!-- resources -->
+        <copy toDir="${dir.build.classes}">
+            <fileset dir="${dir.src.java}">
+                <patternset refid="pattern.resources"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.pre"/>
+    <target name="compile.post"/>
+
+    <target name="compile" depends="compile.pre, compile.common, compile.post"/>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  jar
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="jar" depends="compile" description="Create the jar">
+        <jar jarfile="${file.jar}" compress="no">
+            <fileset dir="${dir.build.classes}">
+                <patternset refid="pattern.resources"/>
+                <include name="**/*.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  apidocs
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <target name="apidocs" depends="prepare" description="Create api documentation">
+        <javadoc    packagenames="*"
+                    destdir="${dir.build.apidocs}"
+                    author="true"
+                    version="true"
+                    group="true" >
+            <classpath refid="path.compile"/>
+            <sourcepath refid="path.source"/>
+        </javadoc>
+    </target>
+
+</project>
+

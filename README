@@ -1,0 +1,12 @@
+================================================================================
+                                 Anodyneos Commons
+================================================================================
+
+Contents:
+
+    BUILDING                Instructions for building from sources
+    LICENSE                 License for this release
+    README                  This document
+    src.java/               Java source code for this release
+    src.lib/                Third party libraries
+

@@ -1,0 +1,11 @@
+================================================================================
+                           Building Anodyneos Commons
+================================================================================
+
+1.  Download and install Apache Ant from http://ant.apache.org/.
+
+2.  Copy build.properties.sample to build.properties.  Make changes to
+    build.properties as necessary.
+
+3.  From the project root directory, run "ant".  For info about other build
+    targets, run "ant -projecthelp".
