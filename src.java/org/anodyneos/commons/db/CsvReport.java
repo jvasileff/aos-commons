@@ -241,6 +241,7 @@ public class CsvReport {
                             while (-1 != (num = r.read(buff))) {
                                 out.write(buff, 0, num);
                             }
+                            out.endField();
                             r.close();
                         } else {
                             out.writeField(o.toString());
