@@ -22,6 +22,7 @@
     <property name="dir.build.ide.classes"      location="${dir.build}/ide.classes"/>
     <property name="dir.build.ide.lib"          location="${dir.build}/ide.lib"/>
     <property name="file.jar"                   location="${dir.build.jar}/${ant.project.name}.jar"/>
+    <property name="file.src.zip"               location="${dir.build.jar}/${ant.project.name}-src.zip"/>
 
     <!-- patterns -->
     <patternset id="pattern.resources">
@@ -136,6 +137,18 @@
                 <include name="**/*.class"/>
             </fileset>
         </jar>
+        <zip zipfile="${file.src.zip}" compress="no">
+            <fileset dir="${dir.src.java}">
+                <patternset refid="pattern.resources"/>
+                <include name="**/*.java"/>
+                <exclude name="CatalogManager.properties"/>
+            </fileset>
+            <fileset dir="${dir.build.java}">
+                <patternset refid="pattern.resources"/>
+                <include name="**/*.java"/>
+                <exclude name="CatalogManager.properties"/>
+            </fileset>
+        </zip>
     </target>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
