@@ -67,7 +67,7 @@
     <target name="prepare.pre"/>
     <target name="prepare.post"/>
 
-    <target name="prepare" depends="prepare.pre, prepare.common, prepare.post"/>
+    <target name="prepare" depends="prepare.pre, prepare.common, prepare.post" description="Create dirs, copy libs, etc."/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  clean
