@@ -1,5 +1,6 @@
 package org.anodyneos.commons.xml;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -79,16 +80,14 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
                     // Let default resolver handle all other URLs
                     return null;
                 } else {
-                    // Only internal resolvers are allowed
-                    throw new SAXException("URI not supported for: '" + systemId + "'.");
+                    // Only internal resolvers are allowed, and none of them were able to find what you're looking for
+                    throw new FileNotFoundException("File not found '" + systemId + "'.");
                 }
             }
             InputStream inputStream = conn.getInputStream();
             inputSource = new InputSource(inputStream);
             inputSource.setPublicId(publicId);
             inputSource.setSystemId(systemId);
-        } catch (java.io.FileNotFoundException e) {
-            throw new SAXException("Resource: '" + systemId + "'" + " not found.");
         } catch (java.io.IOException e) {
             throw new SAXException("IOException opening resource: '" + systemId + "'"
                     + " not found.", e);
