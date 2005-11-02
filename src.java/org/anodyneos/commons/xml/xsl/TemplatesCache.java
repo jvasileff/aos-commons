@@ -9,20 +9,27 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamSource;
 
 import org.anodyneos.commons.net.URI;
 import org.anodyneos.commons.xml.UnifiedResolver;
 import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
 
 /**
  *  Cache stylesheets.
@@ -69,21 +76,46 @@ import org.xml.sax.XMLFilter;
 
 public class TemplatesCache {
 
-    /** TODO: ErrorListener ? */
+    private ErrorListener errorListener;
+    private ErrorHandler errorHandler;
     private Cache cache = new Cache();
     private boolean cacheEnabled = true;
     private TransformerFactory tFactory = TransformerFactory.newInstance();
+    private SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
     private UnifiedResolver resolver;
 
     // CONSTRUCTORS
     public TemplatesCache() {
+        saxParserFactory.setValidating(false);
+        saxParserFactory.setNamespaceAware(true);
     }
     public TemplatesCache(UnifiedResolver resolver) {
+        this();
         tFactory.setURIResolver(resolver);
         this.resolver = resolver;
     }
 
     // PROPERTIES
+
+    /**
+     * Sets the ErrorListener to use for the TransformerFactory and returned Transformers.
+     *
+     * @param errorListener the ErrorListener to use; may not be null.
+     */
+    public void setErrorListener(ErrorListener errorListener) {
+        this.errorListener = errorListener;
+        tFactory.setErrorListener(errorListener);
+    }
+
+    /**
+     * Sets the ErrorHandler to use for returned XMLFilters.
+     *
+     * @param errorHandler the ErrorHandler to use.
+     */
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
     public void setCacheEnabled(boolean cacheEnabled) {
         this.cacheEnabled = cacheEnabled;
     }
@@ -100,20 +132,32 @@ public class TemplatesCache {
     // GET XML FILTER
     public XMLFilter getXMLFilter(Source source)
     throws TransformerConfigurationException, IOException {
-        return ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(source));
+        XMLFilter f = ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(source));
+        if (null != errorHandler) {
+            f.setErrorHandler(errorHandler);
+        }
+        return f;
     }
 
     public XMLFilter getXMLFilter(URI uri)
     throws TransformerConfigurationException, IOException {
-        return ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(uri));
+        XMLFilter f = ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(uri));
+        if (null != errorHandler) {
+            f.setErrorHandler(errorHandler);
+        }
+        return f;
     }
 
     public XMLFilter getXMLFilter(URL url)
     throws TransformerConfigurationException, IOException {
-        return ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(url));
+        XMLFilter f = ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(url));
+        if (null != errorHandler) {
+            f.setErrorHandler(errorHandler);
+        }
+        return f;
     }
 
-    // GET XML FILTER
+    // GET TRANSFORMER HANDLER
     public TransformerHandler getTransformerHandler()
     throws TransformerConfigurationException, IOException {
         return ((SAXTransformerFactory) tFactory).newTransformerHandler();
@@ -136,12 +180,22 @@ public class TemplatesCache {
 
     // GET TRANSFORMER
     public Transformer getTransformer() throws TransformerConfigurationException {
-        return tFactory.newTransformer();
+        Transformer t =  tFactory.newTransformer();
+        if (null != errorListener) {
+            t.setErrorListener(errorListener);
+        }
+        //t.setURIResolver(resolver);
+        return t;
     }
 
     public Transformer getTransformer(Source source)
     throws TransformerConfigurationException, IOException {
-        return getTemplates(source).newTransformer();
+        Transformer t = getTemplates(source).newTransformer();
+        if (null != errorListener) {
+            t.setErrorListener(errorListener);
+        }
+        t.setURIResolver(resolver);
+        return t;
     }
 
     /**
@@ -151,7 +205,12 @@ public class TemplatesCache {
      */
     public Transformer getTransformer(URI uri)
     throws TransformerConfigurationException, IOException {
-        return getTemplates(uri).newTransformer();
+        Transformer t = getTemplates(uri).newTransformer();
+        if (null != errorListener) {
+            t.setErrorListener(errorListener);
+        }
+        t.setURIResolver(resolver);
+        return t;
     }
 
     /**
@@ -161,7 +220,12 @@ public class TemplatesCache {
      */
     public Transformer getTransformer(URL url)
     throws TransformerConfigurationException, IOException {
-        return getTemplates(url).newTransformer();
+        Transformer t = getTemplates(url).newTransformer();
+        if (null != errorListener) {
+            t.setErrorListener(errorListener);
+        }
+        t.setURIResolver(resolver);
+        return t;
     }
 
     /**
@@ -182,8 +246,7 @@ public class TemplatesCache {
                 long lastModified = resourceFile.lastModified();
                 if (null == oldEntry || (null != oldEntry && lastModified > oldEntry.lastModified)) {
                     is = new FileInputStream(resourceFile);
-                    templates = tFactory.newTemplates(
-                            new StreamSource(is, systemId));
+                    templates = tFactory.newTemplates(newSource(is, systemId));
                     cache.put(systemId, new Entry(templates, lastModified));
                 } else {
                     templates = oldEntry.templates;
@@ -193,8 +256,7 @@ public class TemplatesCache {
                 is = conn.getInputStream();
                 long lastModified = conn.getLastModified();
                 if (null == oldEntry || (null != oldEntry && lastModified > oldEntry.lastModified)) {
-                    templates = tFactory.newTemplates(
-                            new StreamSource(is, systemId));
+                    templates = tFactory.newTemplates(newSource(is, systemId));
                     cache.put(systemId, new Entry(templates, lastModified));
                 } else {
                     templates = oldEntry.templates;
@@ -501,5 +563,30 @@ public class TemplatesCache {
         int size() {
             return map.size();
         }
+    }
+
+    private Source newSource(InputStream is, String systemId) throws TransformerConfigurationException {
+        // It would be much easier to do:
+        //      return new StreamSource(is, systemId);
+        // but, we would like to specify the ErrorHandler...
+
+        SAXParser sp;
+        XMLReader reader;
+        try {
+            sp = saxParserFactory.newSAXParser();
+            reader = sp.getXMLReader();
+        } catch (ParserConfigurationException e) {
+            throw new TransformerConfigurationException(e);
+        } catch (SAXException e) {
+            throw new TransformerConfigurationException(e);
+        }
+        if (null != errorHandler) {
+            reader.setErrorHandler(errorHandler);
+        }
+        reader.setEntityResolver(resolver);
+        SAXSource src = new SAXSource(new InputSource(is));
+        src.setSystemId(systemId);
+        src.setXMLReader(reader);
+        return src;
     }
 }
