@@ -1,6 +1,9 @@
 package org.anodyneos.commons.xml.sax;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import org.apache.commons.logging.Log;
@@ -18,7 +21,14 @@ public class BaseDh extends DefaultHandler {
     private ElementProcessor topProcessor;
     private Stack processorStack = new Stack();
 
-    private boolean namespaceContextPushed = false;
+    /**
+     *  endPrefixMapping() calls are made after endElement() pops the processorStack
+     *  but apply to the elementProcessor for which the mappings were created.
+     */
+    private ElementProcessor lastProcessor;
+
+    /** map keys are prefixes, values are namespace URIs */
+    private List cachedStartPrefixMappings = new ArrayList();
 
     public BaseDh (ElementProcessor topProcessor) {
         this.topProcessor = topProcessor;
@@ -33,11 +43,6 @@ public class BaseDh extends DefaultHandler {
                     (Object[]) new String[] { uri, localName, qName }));
         }
 
-        if (! namespaceContextPushed) {
-            ctx.getNamespaceSupport().pushContext();
-        }
-        namespaceContextPushed = false;
-
         ElementProcessor oldProcessor;
         ElementProcessor newProcessor;
 
@@ -48,8 +53,16 @@ public class BaseDh extends DefaultHandler {
             newProcessor = oldProcessor.getProcessorFor(uri, localName, qName);
         }
         processorStack.push(newProcessor);
-        newProcessor.startElement(uri, localName, qName, attributes);
 
+        ctx.getNamespaceSupport().pushContext();
+        for (Iterator it = cachedStartPrefixMappings.iterator(); it.hasNext();) {
+            String[] mapping = (String[]) it.next();
+            ctx.getNamespaceSupport().declarePrefix(mapping[0], mapping[1]);
+            newProcessor.startPrefixMapping(mapping[0], mapping[1]);
+        }
+        cachedStartPrefixMappings.clear();
+
+        newProcessor.startElement(uri, localName, qName, attributes);
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -60,7 +73,9 @@ public class BaseDh extends DefaultHandler {
 
         ElementProcessor processor = (ElementProcessor) processorStack.pop();
         processor.endElement(uri, localName, qName);
+        // NOTE: we are popping the context even though calls may be made to endPrefixMapping()
         ctx.getNamespaceSupport().popContext();
+        lastProcessor = processor;
     }
 
     public void characters(char[] chars, int start, int length) throws SAXException {
@@ -92,16 +107,7 @@ public class BaseDh extends DefaultHandler {
             log.debug(MessageFormat.format("startPrefixMapping(''{0}'', ''{1}'')",
                     (Object[]) new String[] { prefix, uri }));
         }
-        if (! namespaceContextPushed) {
-            ctx.getNamespaceSupport().pushContext();
-            namespaceContextPushed = true;
-        }
-        ctx.getNamespaceSupport().declarePrefix(prefix, uri);
-
-        if (! processorStack.empty()) {
-            ElementProcessor processor = (ElementProcessor) processorStack.peek();
-            processor.startPrefixMapping(prefix, uri);
-        }
+        cachedStartPrefixMappings.add(new String[] { prefix, uri });
     }
 
     public void endPrefixMapping(java.lang.String prefix) throws SAXException {
@@ -109,9 +115,8 @@ public class BaseDh extends DefaultHandler {
             log.debug(MessageFormat.format("endPrefixMapping(''{0}'')",
                     (Object[]) new String[] { prefix }));
         }
-        if (! processorStack.empty()) {
-            ElementProcessor processor = (ElementProcessor) processorStack.peek();
-            processor.endPrefixMapping(prefix);
+        if (null != lastProcessor) {
+            lastProcessor.endPrefixMapping(prefix);
         }
     }
 

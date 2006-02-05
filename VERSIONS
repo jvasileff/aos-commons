@@ -1,0 +1,31 @@
+aos-commons-HEAD
+
+    - org.anodyneos.commons.xml.sax.BaseDH
+
+        - Change startPrefixMapping and endPrefixMapping contract to call these
+          methods _after_ getProcessorFor() is called, and to call the mapping
+          functions on the _new_ processor that was returned by
+          getProcessorFor.
+
+          This makes more sense since the prefixMapping calls really apply to
+          the new element, not the parent of the element that recieves the
+          mappings.
+
+        - COMPATIBILITY NOTE: this breaks compatibility for code that
+          implements ElementProcessor.startPrefixMapping() or
+          ElementProcessor.endPrefixMapping().
+        
+        - COMPATIBILITY NOTE: this breaks compatibility for code in which
+          ElementProcessor.getProcessorFor() relies on the prefix included in
+          qName to have been mapped by prior calls to startPrefixMapping().
+          The new contract does not call startPrefixMapping() until after
+          getProcessorFor() is called.
+            
+
+aos-commons-20051102-00: 1.5
+
+    - improvements to org.anodyneos.commons.xml.xsl.TemplatesCache
+
+aos-commons-20050414-00: 1.5
+
+    - first tagged version
