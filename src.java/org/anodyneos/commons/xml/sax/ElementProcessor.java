@@ -1,5 +1,6 @@
 package org.anodyneos.commons.xml.sax;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -10,6 +11,10 @@ public class ElementProcessor extends org.xml.sax.helpers.DefaultHandler {
 
     public ElementProcessor(BaseContext ctx) {
         this.ctx = ctx;
+    }
+
+    public ElementProcessor getProcessorFor(String uri, String localName, String qName, Attributes attrs) throws SAXException {
+        return getProcessorFor(uri, localName, qName);
     }
 
     public ElementProcessor getProcessorFor(String uri, String localName, String qName) throws SAXException {

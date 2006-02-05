@@ -50,7 +50,7 @@ public class BaseDh extends DefaultHandler {
             newProcessor = topProcessor;
         } else {
             oldProcessor = ((ElementProcessor) processorStack.peek());
-            newProcessor = oldProcessor.getProcessorFor(uri, localName, qName);
+            newProcessor = oldProcessor.getProcessorFor(uri, localName, qName, attributes);
         }
         processorStack.push(newProcessor);
 
