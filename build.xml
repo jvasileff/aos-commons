@@ -10,6 +10,9 @@
 
     <property file="build.properties"/>
 
+    <property name="compile.source" value="1.4"/>
+    <property name="compile.target" value="1.4"/>
+
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  common
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -18,8 +21,8 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  required jars
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <property name="resolver.jar" location="${dir.jars}/xml-commons-resolver-1.1/resolver.jar"/>
-    <property name="commons-logging.jar" location="${dir.jars}/commons-logging-1.0.3/commons-logging.jar"/>
+    <property name="resolver.jar" location="${dir.jars}/xml-commons-resolver-1.2/resolver.jar"/>
+    <property name="commons-logging-1.1.1.jar" location="${dir.jars}/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  prepare.post
@@ -27,7 +30,7 @@
     <target name="prepare.post">
         <!-- ide.lib -->
         <copy toDir="${dir.build.ide.lib}" file="${resolver.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${commons-logging.jar}"/>
+        <copy toDir="${dir.build.ide.lib}" file="${commons-logging-1.1.1.jar}"/>
 
         <!-- paths -->
         <path id="path.compile">

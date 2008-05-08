@@ -4,13 +4,9 @@ compile.debuglevel:lines,source,vars
 
 ################################################################################
 ##
-## EXTERNAL JAR FILES; ONE OF THE FOLLOWING SECTIONS IS NECESSARY:
+## EXTERNAL JAR FILES
 ##
 ################################################################################
 
 ## ALL JARS FROM REPOSITORY:
-dir.jars=/opt/zeus/repository/jars
-
-## JARS SPECIFIED INDIVIDUALLY:
-# xml-apis.jar=/path/to/jarfile
-# resolver.jar=/path/to/jarfile
+dir.jars=/opt/repository-aos

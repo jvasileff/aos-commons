@@ -107,7 +107,9 @@
         <javac  destdir="${dir.build.classes}"
                 deprecation="${compile.deprecation}"
                 debug="${compile.debug}"
-                debuglevel="${compile.debuglevel}">
+                debuglevel="${compile.debuglevel}"
+                source="${compile.source}"
+                target="${compile.target}">
             <src refid="path.source"/>
             <classpath refid="path.compile"/>
         </javac>
