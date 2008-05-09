@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src.java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="build/ide.lib/resolver.jar"/>
-	<classpathentry kind="lib" path="build/ide.lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="build/ide.lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="build/ide.lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="build/ide.classes"/>
 </classpath>
