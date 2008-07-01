@@ -148,6 +148,11 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
         protocolHandlers.put(protocol, uriHandler);
     }
 
+    public synchronized void setProtocolHandlers(HashMap handlers) {
+        protocolHandlers.clear();
+        protocolHandlers.putAll(handlers);
+    }
+
     /**
      * Override URIHelper.openStream() to provide support for XML Catalog.
      */
