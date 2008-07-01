@@ -73,7 +73,7 @@ import org.xml.sax.XMLReader;
     Transformer.setURIResolver() used for document()
 */
 
-public class TemplatesCache {
+public class TemplatesCacheImpl {
 
     private ErrorListener errorListener;
     private ErrorHandler errorHandler;
@@ -84,12 +84,12 @@ public class TemplatesCache {
     private UnifiedResolver resolver;
 
     // CONSTRUCTORS
-    public TemplatesCache() {
+    public TemplatesCacheImpl() {
         setSAXParserFactory(SAXParserFactory.newInstance());
         setTransformerFactory(TransformerFactory.newInstance());
     }
 
-    public TemplatesCache(UnifiedResolver resolver) {
+    public TemplatesCacheImpl(UnifiedResolver resolver) {
         this();
         setUnifiedResolver(resolver);
     }
