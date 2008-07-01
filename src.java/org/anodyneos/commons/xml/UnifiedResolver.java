@@ -15,7 +15,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import org.anodyneos.commons.net.URIHandler;
+import org.anodyneos.commons.net.AbstractURIHandler;
 import org.anodyneos.commons.net.URIHelper;
 import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.CatalogManager;
@@ -140,11 +140,11 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
         return source;
     }
 
-    protected synchronized URIHandler getURIHandler(URI uri) {
-        return (URIHandler) protocolHandlers.get(uri.getScheme());
+    protected synchronized AbstractURIHandler getURIHandler(URI uri) {
+        return (AbstractURIHandler) protocolHandlers.get(uri.getScheme());
     }
 
-    public synchronized void addProtocolHandler(String protocol, URIHandler uriHandler) {
+    public synchronized void addProtocolHandler(String protocol, AbstractURIHandler uriHandler) {
         protocolHandlers.put(protocol, uriHandler);
     }
 

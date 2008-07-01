@@ -15,7 +15,7 @@ import java.net.URL;
  * @author jvas
  *
  */
-public class ClassLoaderURIHandler extends URIHandler {
+public class ClassLoaderURIHandler extends AbstractURIHandler {
 
     private ClassLoader classLoader;
 
