@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -13,7 +15,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import org.anodyneos.commons.net.URI;
 import org.anodyneos.commons.net.URIHandler;
 import org.anodyneos.commons.net.URIHelper;
 import org.apache.xml.resolver.Catalog;
@@ -62,15 +63,17 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
 
     // SAX EntityResolver
     public InputSource resolveEntity(String publicId, String systemId)
-    throws org.xml.sax.SAXException, java.net.MalformedURLException {
+    throws org.xml.sax.SAXException, IOException {
 
         InputSource inputSource = null;
 
         URI systemURI;
         try {
             systemURI = new URI(systemId);
-        } catch (URI.MalformedURIException e) {
-            throw new MalformedURLException(systemId);
+        } catch (URISyntaxException e) {
+            IOException ioe = new IOException(e.getMessage());
+            e.initCause(e);
+            throw ioe;
         }
 
         try {
@@ -97,16 +100,16 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     }
 
     // trax URIResolver
-    public Source resolve(String href, String base)
-    throws javax.xml.transform.TransformerException {
+    public Source resolve(String href, String base) throws javax.xml.transform.TransformerException {
         URI uri;
         try {
             if (base != null) {
-                uri = new URI(new URI(base), href);
+                URI baseURI = new URI(base);
+                uri = baseURI.resolve(href);
             } else {
                 uri = new URI(href);
             }
-        } catch (URI.MalformedURIException e) {
+        } catch (URISyntaxException e) {
             throw new TransformerException(e);
         }
 

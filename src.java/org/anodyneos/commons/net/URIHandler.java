@@ -3,6 +3,7 @@ package org.anodyneos.commons.net;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -82,7 +83,7 @@ public abstract class URIHandler {
     /**
      *  Returns a URL for the given URI or null if the URI cannot be resolved.
      *  Note: there is no guarantee that the returned URL points to an existing
-     *  resource, only that the URI was abled to be resolved to a URL.
+     *  resource, only that the URI was able to be resolved to a URL.
      *
      *  @return The URL or null.
      */

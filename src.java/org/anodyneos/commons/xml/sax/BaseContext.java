@@ -1,6 +1,8 @@
 package org.anodyneos.commons.xml.sax;
 
-import org.anodyneos.commons.net.URI;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.helpers.NamespaceSupport;
@@ -26,7 +28,7 @@ public class BaseContext {
     }
 
     public URI uriFromRelative(String location)
-            throws URI.MalformedURIException {
+            throws URISyntaxException {
 
         String baseSystemId = null;
         URI locationURI;
@@ -38,7 +40,8 @@ public class BaseContext {
             baseSystemId = getInputSource().getSystemId();
         }
         if (baseSystemId != null) {
-            locationURI = new URI(new URI(baseSystemId), location);
+            URI baseURI = new URI(baseSystemId);
+            locationURI = baseURI.resolve(location);
         } else {
             locationURI = new URI(location);
         }
@@ -51,4 +54,5 @@ public class BaseContext {
     public NamespaceSupport getNamespaceSupport() {
         return namespaceSupport;
     }
+
 }

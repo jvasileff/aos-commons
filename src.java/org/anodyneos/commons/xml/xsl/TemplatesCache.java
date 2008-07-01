@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -22,7 +24,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.anodyneos.commons.net.URI;
 import org.anodyneos.commons.xml.UnifiedResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
@@ -302,7 +303,7 @@ public class TemplatesCache {
         }
         if(url != null) {
             templates = getTemplates(systemId, url);
-        } else if (null == resolver || resolver.isDefaultLookupEnabled()) {
+        } else if (resolver.isDefaultLookupEnabled()) {
             // try default resolver
             url = new URL(uri.toString());
             templates = getTemplates(systemId, url);
@@ -323,9 +324,9 @@ public class TemplatesCache {
     throws TransformerConfigurationException, IOException {
         try {
             return getTemplates(new URI(url.toExternalForm()));
-        } catch (URI.MalformedURIException e) {
+        } catch (URISyntaxException e) {
             // this should not happen
-            return null;
+            throw new Error(e);
         }
     }
 
