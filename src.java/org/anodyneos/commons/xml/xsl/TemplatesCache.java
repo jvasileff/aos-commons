@@ -68,8 +68,6 @@ import org.xml.sax.XMLReader;
  *  </pre>
  */
 
-
-
 /*
     TransformerFactory.setURIResolver() used for xsl:import and xsl:include
     Transformer.setURIResolver() used for document()
@@ -81,48 +79,87 @@ public class TemplatesCache {
     private ErrorHandler errorHandler;
     private Cache cache = new Cache();
     private boolean cacheEnabled = true;
-    private TransformerFactory tFactory = TransformerFactory.newInstance();
-    private SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    private TransformerFactory tFactory;
+    private SAXParserFactory saxParserFactory;
     private UnifiedResolver resolver;
 
     // CONSTRUCTORS
     public TemplatesCache() {
-        saxParserFactory.setValidating(false);
-        saxParserFactory.setNamespaceAware(true);
+        setSAXParserFactory(SAXParserFactory.newInstance());
+        setTransformerFactory(TransformerFactory.newInstance());
     }
+
     public TemplatesCache(UnifiedResolver resolver) {
         this();
-        tFactory.setURIResolver(resolver);
-        this.resolver = resolver;
+        setUnifiedResolver(resolver);
     }
 
     // PROPERTIES
 
     /**
-     * Sets the ErrorListener to use for the TransformerFactory and returned Transformers.
+     * NOTE: The provided TransformerFactory will be re-configured
+     * to use the UnifiedResolver (if or when set.)
      *
-     * @param errorListener the ErrorListener to use; may not be null.
+     * @param tFactory The TransformerFactory to reconfigure and use.
      */
+    public void setTransformerFactory(TransformerFactory tFactory) {
+        if (null != resolver) {
+            tFactory.setURIResolver(resolver);
+        }
+        this.tFactory = tFactory;
+    }
+
+    public TransformerFactory getTransformerFactory() {
+        return tFactory;
+    }
+
+    /**
+     * NOTE: The provided SAXParserFactory will be re-configured
+     * to disable validation and enable namespaces.
+     *
+     * @param saxParserFactory The SAXParserFactory to reconfigure and use.
+     */
+    public void setSAXParserFactory(SAXParserFactory saxParserFactory) {
+        saxParserFactory.setValidating(false);
+        saxParserFactory.setNamespaceAware(true);
+        this.saxParserFactory = saxParserFactory;
+    }
+
+    public SAXParserFactory getSAXParserFactory() {
+        return saxParserFactory;
+    }
+
+    public void setUnifiedResolver(UnifiedResolver resolver) {
+        this.resolver = resolver;
+        tFactory.setURIResolver(resolver);
+    }
+
+    public UnifiedResolver getUnifiedResolver() {
+        return resolver;
+    }
+
     public void setErrorListener(ErrorListener errorListener) {
         this.errorListener = errorListener;
         tFactory.setErrorListener(errorListener);
     }
 
-    /**
-     * Sets the ErrorHandler to use for returned XMLFilters.
-     *
-     * @param errorHandler the ErrorHandler to use.
-     */
+    public ErrorListener getErrorListener() {
+        return errorListener;
+    }
+
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 
-    public void setCacheEnabled(boolean cacheEnabled) {
-        this.cacheEnabled = cacheEnabled;
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
-    public boolean getCacheEnabled() {
-        return this.cacheEnabled;
-    }
+
+    public void setCacheEnabled(boolean cacheEnabled) { this.cacheEnabled = cacheEnabled; }
+    public boolean getCacheEnabled() { return this.cacheEnabled; }
+
+
+    // CACHE MANAGEMENT
     public void clearCache() {
         cache.clear();
     }
@@ -361,13 +398,6 @@ public class TemplatesCache {
         }
         */
         return null;
-    }
-
-    /**
-     */
-    public UnifiedResolver getResolver() {
-        // @TODO: is this safe?  The resolver can be modified.
-        return resolver;
     }
 
     /**
