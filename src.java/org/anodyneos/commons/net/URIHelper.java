@@ -14,7 +14,7 @@ import java.net.URLConnection;
  * already in use.
  *
  * @see URI
- * @see AbstractURIHandler
+ * @see URIHandler
  */
 public abstract class URIHelper {
 
@@ -27,7 +27,7 @@ public abstract class URIHelper {
      *
      *  @return The URIHandler or null.
      */
-    protected abstract AbstractURIHandler getURIHandler(URI uri);
+    protected abstract URIHandler getURIHandler(URI uri);
 
     /**
      *  Returns a URLConnection for the given URI or null if the URI cannot be
@@ -37,7 +37,7 @@ public abstract class URIHelper {
      *  @throws IOException if an IOException occurs
      */
     public URLConnection openConnection(URI uri) throws IOException {
-        AbstractURIHandler uriHandler = getURIHandler(uri);
+        URIHandler uriHandler = getURIHandler(uri);
         if (null == uriHandler) {
             return null;
         }
@@ -52,7 +52,7 @@ public abstract class URIHelper {
      *  @throws IOException if an IOException occurs
      */
     public InputStream openStream(URI uri) throws IOException {
-        AbstractURIHandler uriHandler = getURIHandler(uri);
+        URIHandler uriHandler = getURIHandler(uri);
         if (null == uriHandler) {
             return null;
         }
