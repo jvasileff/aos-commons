@@ -62,6 +62,16 @@ public class BaseDh extends DefaultHandler {
         }
         cachedStartPrefixMappings.clear();
 
+        // http://www.w3.org/TR/REC-xml/#sec-white-space
+        String xmlSpace = attributes.getValue("xml:space");
+        if("preserve".equals(xmlSpace)) {
+           ctx.pushXmlSpacePreserve(true);
+        } else if ("default".equals(xmlSpace)) {
+           ctx.pushXmlSpacePreserve(false);
+        } else {
+           ctx.pushXmlSpacePreserve(ctx.isXmlSpacePreserve());
+        }
+
         newProcessor.startElement(uri, localName, qName, attributes);
     }
 
@@ -75,6 +85,7 @@ public class BaseDh extends DefaultHandler {
         processor.endElement(uri, localName, qName);
         // NOTE: we are popping the context even though calls may be made to endPrefixMapping()
         ctx.getNamespaceSupport().popContext();
+        ctx.popXmlSpacePreserve();
         lastProcessor = processor;
     }
 

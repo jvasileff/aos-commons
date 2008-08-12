@@ -2,6 +2,7 @@ package org.anodyneos.commons.xml.sax;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Stack;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -12,6 +13,7 @@ public class BaseContext {
     private InputSource inputSource;
     private Locator locator;
     private NamespaceSupport namespaceSupport = new NamespaceSupport();
+    private Stack xmlSpacePreserve = new Stack();
 
     public BaseContext(InputSource inputSource) {
         this.inputSource = inputSource;
@@ -53,6 +55,22 @@ public class BaseContext {
      */
     public NamespaceSupport getNamespaceSupport() {
         return namespaceSupport;
+    }
+
+    public boolean isXmlSpacePreserve() {
+        if (xmlSpacePreserve.empty()) {
+            return false;
+        } else {
+            return ((Boolean)xmlSpacePreserve.peek()).booleanValue();
+        }
+    }
+
+    void pushXmlSpacePreserve(boolean value) {
+        xmlSpacePreserve.push(Boolean.valueOf(value));
+    }
+
+    void popXmlSpacePreserve() {
+        xmlSpacePreserve.pop();
     }
 
 }
