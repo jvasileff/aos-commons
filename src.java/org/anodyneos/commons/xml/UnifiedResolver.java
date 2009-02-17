@@ -105,7 +105,12 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
         try {
             if (base != null) {
                 URI baseURI = new URI(base);
-                uri = baseURI.resolve(href);
+                // check to support the self referencing construct "document('')" in XSLT.
+                if ("".equals(href)) {
+                    uri = baseURI;
+                } else {
+                    uri = baseURI.resolve(href);
+                }
             } else {
                 uri = new URI(href);
             }
