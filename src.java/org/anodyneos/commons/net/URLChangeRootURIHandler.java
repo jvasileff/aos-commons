@@ -28,11 +28,68 @@ public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHa
 
     private static final Log log = LogFactory.getLog(URLChangeRootURIHandler.class);
 
-    private URI templateURI;
+    private URL rootURL;
+    private URI rootURI;
 
-    public URLChangeRootURIHandler(URL templateURL) throws URISyntaxException {
-        log.warn("This class has never been tested.");
-        URI uri = templateURL.toURI();
+    public URLChangeRootURIHandler() {
+        // expect future call to setRootURL
+    }
+
+    public URLChangeRootURIHandler(String rootURL) throws URISyntaxException, MalformedURLException {
+        setRootURL(rootURL);
+    }
+
+    public URLChangeRootURIHandler(URL rootURL) throws URISyntaxException {
+        setRootURL(rootURL);
+    }
+
+    /**
+     *  Returns a URL for the given URI or null if the URI cannot be resolved.
+     *
+     *  @return The URL or null.
+     */
+    public URL toURL(URI uri) {
+        if (null == rootURI) {
+            return  null;
+        } else {
+            String path = uri.getPath();
+            if (null == path || ! path.startsWith("/")) {
+                return null;
+            } else {
+                try {
+                    URI newURI = new URI(rootURI.getScheme()
+                            ,rootURI.getUserInfo()
+                            ,rootURI.getHost()
+                            ,rootURI.getPort()
+                            ,rootURI.getPath() + uri.getPath().substring(1)
+                            ,uri.getQuery()
+                            ,uri.getFragment());
+
+                    newURI = newURI.normalize();
+                    if (! newURI.getPath().startsWith(rootURI.getPath())) {
+                        return null;
+                    } else {
+                        return newURI.toURL();
+                    }
+                } catch (URISyntaxException e) {
+                    return null;
+                } catch (MalformedURLException e) {
+                    return null;
+                }
+            }
+        }
+    }
+
+    public URL getRootURL() {
+        return rootURL;
+    }
+
+    public void setRootURL(String rootURL) throws URISyntaxException, MalformedURLException {
+        setRootURL(new URL(rootURL));
+    }
+
+    public void setRootURL(URL rootURL) throws URISyntaxException {
+        URI uri = rootURL.toURI();
         uri = uri.normalize();
         if (uri.isOpaque()) {
             throw new URISyntaxException(uri.toString(),
@@ -42,40 +99,8 @@ public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHa
             throw new URISyntaxException(uri.toString(),
                     "URL path must be a directory and end in '/': " + uri.toString());
         }
-        this.templateURI = uri;
-    }
-
-    /**
-     *  Returns a URL for the given URI or null if the URI cannot be resolved.
-     *
-     *  @return The URL or null.
-     */
-    public URL toURL(URI uri) {
-        String path = uri.getPath();
-        if (null == path || ! path.startsWith("/")) {
-            return null;
-        } else {
-            try {
-                URI newURI = new URI(templateURI.getScheme()
-                        ,templateURI.getUserInfo()
-                        ,templateURI.getHost()
-                        ,templateURI.getPort()
-                        ,templateURI.getPath() + uri.getPath().substring(1)
-                        ,uri.getQuery()
-                        ,uri.getFragment());
-
-                newURI = newURI.normalize();
-                if (! newURI.getPath().startsWith(templateURI.getPath())) {
-                    return null;
-                } else {
-                    return newURI.toURL();
-                }
-            } catch (URISyntaxException e) {
-                return null;
-            } catch (MalformedURLException e) {
-                return null;
-            }
-        }
+        this.rootURL = rootURL;
+        this.rootURI = uri;
     }
 
 }

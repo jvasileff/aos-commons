@@ -19,6 +19,13 @@ public class ClassLoaderURIHandler extends AbstractURIHandler implements URIHand
 
     private ClassLoader classLoader;
 
+    public ClassLoaderURIHandler() {
+        this.classLoader = Thread.currentThread().getContextClassLoader();
+        if (this.classLoader == null) {
+            this.classLoader = this.getClass().getClassLoader();
+        }
+    }
+
     public ClassLoaderURIHandler(ClassLoader cl) {
         this.classLoader = cl;
     }
@@ -30,13 +37,20 @@ public class ClassLoaderURIHandler extends AbstractURIHandler implements URIHand
      */
     public URL toURL(URI uri) {
         assert(uri.isOpaque());
-        String path = uri.getSchemeSpecificPart();
-
-        if (null == path) {
+        if (null == classLoader) {
             return null;
         } else {
-            return classLoader.getResource(path);
+            String path = uri.getSchemeSpecificPart();
+
+            if (null == path) {
+                return null;
+            } else {
+                return classLoader.getResource(path);
+            }
         }
     }
+
+    public ClassLoader getClassLoader() { return classLoader; }
+    public void setClassLoader(ClassLoader classLoader) { this.classLoader = classLoader; }
 
 }
