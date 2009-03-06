@@ -135,13 +135,13 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
     <target name="jar" depends="compile" description="Create the jar">
-        <jar jarfile="${file.jar}" compress="no">
+        <jar jarfile="${file.jar}" compress="yes">
             <fileset dir="${dir.build.classes}">
                 <patternset refid="pattern.resources"/>
                 <include name="**/*.class"/>
             </fileset>
         </jar>
-        <zip zipfile="${file.src.zip}" compress="no">
+        <zip zipfile="${file.src.zip}" compress="yes">
             <fileset dir="${dir.src.java}">
                 <patternset refid="pattern.resources"/>
                 <include name="**/*.java"/>
