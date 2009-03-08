@@ -35,9 +35,11 @@ public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHa
         // expect future call to setRootURL
     }
 
+    /*
     public URLChangeRootURIHandler(String rootURL) throws URISyntaxException, MalformedURLException {
         setRootURL(rootURL);
     }
+    */
 
     public URLChangeRootURIHandler(URL rootURL) throws URISyntaxException {
         setRootURL(rootURL);
@@ -84,9 +86,11 @@ public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHa
         return rootURL;
     }
 
+    /*
     public void setRootURL(String rootURL) throws URISyntaxException, MalformedURLException {
         setRootURL(new URL(rootURL));
     }
+    */
 
     public void setRootURL(URL rootURL) throws URISyntaxException {
         URI uri = rootURL.toURI();
@@ -96,8 +100,7 @@ public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHa
                     "Opaque URLs are not supported; scheme specific part must have a leading '/': " + uri.toString());
         }
         if (! uri.getPath().endsWith("/")) {
-            throw new URISyntaxException(uri.toString(),
-                    "URL path must be a directory and end in '/': " + uri.toString());
+            uri = new URI(uri.toString() + "/");
         }
         this.rootURL = rootURL;
         this.rootURI = uri;
