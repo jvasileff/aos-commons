@@ -15,8 +15,8 @@ public class CDATAProcessor extends ElementProcessor {
     }
 
     public void startElement(String uri, String localName, String qName,
-            Attributes attributes) throws SAXException {
-        this.attributes = new AttributesImpl(attributes);
+            Attributes attrs) throws SAXException {
+        this.attributes = new AttributesImpl(attrs);
     }
 
     public void characters(char[] chars, int start, int length) {

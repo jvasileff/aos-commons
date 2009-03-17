@@ -40,6 +40,7 @@ import java.net.URLConnection;
 public abstract class AbstractURIHandler implements URIHandler {
 
     protected AbstractURIHandler() {
+        // super();
     }
 
     /**

@@ -19,6 +19,7 @@ import java.net.URLConnection;
 public abstract class URIHelper {
 
     protected URIHelper() {
+        // super();
     }
 
     /**

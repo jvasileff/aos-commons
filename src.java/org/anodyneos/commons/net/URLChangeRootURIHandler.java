@@ -5,9 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * This class's toURL method resolves non-Opaque URIs of the form
  * "<i>file</i>:/path/to/Resource"
@@ -26,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHandler {
 
-    private static final Log log = LogFactory.getLog(URLChangeRootURIHandler.class);
+    //private static final Log log = LogFactory.getLog(URLChangeRootURIHandler.class);
 
     private URL rootURL;
     private URI rootURI;

@@ -69,6 +69,7 @@ public class CsvReport {
     }
 
     private CsvReport() {
+        // private constructor
     }
 
     private boolean readParms(String[] argv) throws ReportException {
@@ -186,12 +187,12 @@ public class CsvReport {
                 } catch (IOException e) {
                     throw new ReportException("cannot read input file '" + inPath + "'\n" + e.getMessage());
                 } finally {
-                    try { in.close(); } catch (IOException e) { }
+                    try { if (null != in) { in.close(); } } catch (IOException e) { /* no op */ }
                 }
             }
             runQuery(con, query.toString());
         } finally {
-            try { con.close(); } catch (SQLException e) { }
+            try { con.close(); } catch (SQLException e) { /* no op */ }
         }
     }
 
@@ -258,13 +259,13 @@ public class CsvReport {
             throw new ReportException("An IOException has occured\n" + e.getMessage());
         } finally {
             if (null != stmt) {
-                try { stmt.close(); } catch (SQLException e) { }
+                try { stmt.close(); } catch (SQLException e) { /* no op */ }
             }
             if (null != rs) {
-                try { rs.close(); } catch (SQLException e) { }
+                try { rs.close(); } catch (SQLException e) { /* no op */ }
             }
             if (null != out) {
-                try { out.close(); } catch (IOException e) { }
+                try { out.close(); } catch (IOException e) { /* no op */ }
             }
         }
     }

@@ -44,13 +44,6 @@ public class StripNamespaceFilter extends XMLFilterImpl {
     private Set namespacesToStrip = new HashSet();
     private int bigNum = (int) Math.pow(36, 3);
 
-    // instance variables to test for logging for performance.
-    private boolean logDebugEnabled = logger.isDebugEnabled();
-    private boolean logInfoEnabled = logger.isInfoEnabled();
-    private boolean logWarnEnabled = logger.isWarnEnabled();
-    private boolean logErrorEnabled = logger.isErrorEnabled();
-    private boolean logFatalEnabled = logger.isFatalEnabled();
-
     /**
      * Create a new instance; if setNamespaces() is not called, the new
      * instance will strip the namespace <code>http://www.w3.org/1999/xhtml</code>.
@@ -84,18 +77,18 @@ public class StripNamespaceFilter extends XMLFilterImpl {
     }
 
     public void startDocument() throws SAXException {
-        if(logDebugEnabled) { logger.debug("recv: startDocument()"); }
+        if(logger.isDebugEnabled()) { logger.debug("recv: startDocument()"); }
         mappings = new NamespaceMapping();
         defaultNSPrefixes = new NamespaceMapping();
-        if(logDebugEnabled) { logger.debug("send: startDocument()"); }
+        if(logger.isDebugEnabled()) { logger.debug("send: startDocument()"); }
         super.startDocument();
     }
 
     public void endDocument() throws SAXException {
-        if(logDebugEnabled) { logger.debug("recv: endDocument()"); }
+        if(logger.isDebugEnabled()) { logger.debug("recv: endDocument()"); }
         mappings = null;
         defaultNSPrefixes = null;
-        if(logDebugEnabled) { logger.debug("snd:  endDocument()"); }
+        if(logger.isDebugEnabled()) { logger.debug("snd:  endDocument()"); }
         super.endDocument();
     }
 
@@ -143,7 +136,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if(logDebugEnabled) {
+        if(logger.isDebugEnabled()) {
             logger.debug("recv: endElement(" + uri + ", " + localName + ", " + qName + ")");
         }
         /*
@@ -166,25 +159,25 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         String myLocalName = parseLocalName(localName);
         String myURI = mappings.getNamespaceURI(prefix);
 
-        if (logWarnEnabled && (null != uri && ! uri.equals(myURI)) || (null == uri && null != myURI)) {
+        if (logger.isWarnEnabled() && (null != uri && ! uri.equals(myURI)) || (null == uri && null != myURI)) {
             logger.warn("endElement uri parameter does not match what was expected: \""
                     + uri + "\" != \"" + myURI + "\"");
         }
 
         if (namespacesToStrip.contains(myURI) || null == myURI || myURI.length() == 0) {
-            if(logDebugEnabled) {
+            if(logger.isDebugEnabled()) {
                 logger.debug("send: endElement(" + "" + ", " + myLocalName + ", " + myLocalName  + ")");
             }
             super.endElement("", myLocalName, myLocalName);
         } else { // ! namespacesToStrip.contains(uri)
             if (null == prefix || prefix.length() == 0) {
                 String newQName = defaultNSPrefixes.getPrefix(myURI);
-                if(logDebugEnabled) {
+                if(logger.isDebugEnabled()) {
                     logger.debug("send: endElement(" + myURI + ", " + myLocalName + ", " + newQName + ")");
                 }
                 super.endElement(myURI, myLocalName, newQName);
             } else { // prefix not empty
-                if(logDebugEnabled) {
+                if(logger.isDebugEnabled()) {
                     logger.debug("send: endElement(" + uri + ", " + myLocalName + ", " + qName + ")");
                 }
                 super.endElement(uri, myLocalName, qName);
@@ -193,7 +186,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        if(logDebugEnabled) { logger.debug("recv: endPrefixMapping(" + prefix + ")"); }
+        if(logger.isDebugEnabled()) { logger.debug("recv: endPrefixMapping(" + prefix + ")"); }
         /*
          * Always pop from mappings after done processing
          *
@@ -216,11 +209,11 @@ public class StripNamespaceFilter extends XMLFilterImpl {
                 defaultNSPrefixes.pop(myPrefix);
                 // end mapping for this prefix if we no longer have references.
                 if (!defaultNSPrefixes.prefixExists(myPrefix)) {
-                    if(logDebugEnabled) { logger.debug("send: endPrefixMapping(" + myPrefix + ")"); }
+                    if(logger.isDebugEnabled()) { logger.debug("send: endPrefixMapping(" + myPrefix + ")"); }
                     super.endPrefixMapping(myPrefix);
                 }
             } else { // prefix is not empty
-                if(logDebugEnabled) { logger.debug("send: endPrefixMapping(" + prefix + ")"); }
+                if(logger.isDebugEnabled()) { logger.debug("send: endPrefixMapping(" + prefix + ")"); }
                 super.endPrefixMapping(prefix);
             }
         }
@@ -229,7 +222,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
 
     public void startElement(String uri, String localName, String qName, Attributes attrs)
             throws SAXException {
-        if(logDebugEnabled) {
+        if(logger.isDebugEnabled()) {
             logger.debug("recv: startElement(" + uri + ", " + localName + ", " + qName + ", " + attrs + ")");
         }
         /*
@@ -253,25 +246,25 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         String myLocalName = parseLocalName(localName);
         String myURI = mappings.getNamespaceURI(prefix);
 
-        if (logWarnEnabled && (null != uri && ! uri.equals(myURI)) || (null == uri && null != myURI)) {
+        if (logger.isWarnEnabled() && (null != uri && ! uri.equals(myURI)) || (null == uri && null != myURI)) {
             logger.warn("startElement uri parameter does not match what was expected: \""
                     + uri + "\" != \"" + myURI + "\"");
         }
 
         if ("".equals(myURI) || namespacesToStrip.contains(myURI)) {
-            if(logDebugEnabled) {
+            if(logger.isDebugEnabled()) {
                 logger.debug("send: startElement(" + "" + ", " + myLocalName + ", " + myLocalName + ", " + newAttrs + ")");
             }
             super.startElement("", myLocalName, myLocalName, newAttrs);
         } else { // ! namespacesToStrip.contains(uri)
             if (null == prefix || prefix.length() == 0) {
                 String newQName = defaultNSPrefixes.getPrefix(myURI) + ":" + myLocalName;
-                if(logDebugEnabled) {
+                if(logger.isDebugEnabled()) {
                     logger.debug("send: startElement(" + myURI + ", " + myLocalName + ", " + newQName + ", " + newAttrs + ")");
                 }
                 super.startElement(myURI, myLocalName, newQName, newAttrs);
             } else { // prefix not empty
-                if(logDebugEnabled) {
+                if(logger.isDebugEnabled()) {
                     logger.debug("send: startElement(" + uri + ", " + myLocalName + ", " + qName + ", " + newAttrs + ")");
                 }
                 super.startElement(uri, myLocalName, qName, newAttrs);
@@ -280,7 +273,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        if (logDebugEnabled) { logger.debug("recv: startPrefixMapping(" + prefix + ", " + uri + ")"); }
+        if (logger.isDebugEnabled()) { logger.debug("recv: startPrefixMapping(" + prefix + ", " + uri + ")"); }
         /*
          * Store mapping in mappings
          *
@@ -313,13 +306,13 @@ public class StripNamespaceFilter extends XMLFilterImpl {
                     // create new prefix
                     myPrefix = genPrefix();
                     defaultNSPrefixes.push(myPrefix, uri);
-                    if (logDebugEnabled) { logger.debug("send: startPrefixMapping(" + myPrefix + ", " + uri + ")"); }
+                    if (logger.isDebugEnabled()) { logger.debug("send: startPrefixMapping(" + myPrefix + ", " + uri + ")"); }
                     super.startPrefixMapping(myPrefix, uri);
                 }
             } else { // prefix is not empty
                 // we really should check for prefix conflicts with the ones in
                 // defaultNSPrefixes
-                if (logDebugEnabled) { logger.debug("send: startPrefixMapping(" + prefix + ", " + uri + ")"); }
+                if (logger.isDebugEnabled()) { logger.debug("send: startPrefixMapping(" + prefix + ", " + uri + ")"); }
                 super.startPrefixMapping(prefix, uri);
             }
         }

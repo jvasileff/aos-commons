@@ -13,6 +13,7 @@ public class NullProcessor extends ElementProcessor {
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
+        /* no op */
     }
 }
 

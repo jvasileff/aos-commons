@@ -277,7 +277,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
             if(url.getProtocol().equals("file")) {
                 File resourceFile = new File(url.getFile());
                 long lastModified = resourceFile.lastModified();
-                if (null == oldEntry || (null != oldEntry && lastModified > oldEntry.lastModified)) {
+                if (null == oldEntry || (lastModified > oldEntry.lastModified)) {
                     is = new FileInputStream(resourceFile);
                     templates = tFactory.newTemplates(newSource(is, systemId));
                     cache.put(systemId, new Entry(templates, lastModified));
@@ -288,7 +288,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
                 URLConnection conn = url.openConnection();
                 is = conn.getInputStream();
                 long lastModified = conn.getLastModified();
-                if (null == oldEntry || (null != oldEntry && lastModified > oldEntry.lastModified)) {
+                if (null == oldEntry || (lastModified > oldEntry.lastModified)) {
                     templates = tFactory.newTemplates(newSource(is, systemId));
                     cache.put(systemId, new Entry(templates, lastModified));
                 } else {
@@ -296,7 +296,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
                 }
             }
         } finally {
-            try { if(is != null) is.close(); } catch (Exception e) { }
+            try { if(is != null) is.close(); } catch (Exception e) { /* no op */ }
         }
         return templates;
     }

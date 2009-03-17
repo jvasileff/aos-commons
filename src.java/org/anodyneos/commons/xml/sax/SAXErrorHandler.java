@@ -15,7 +15,9 @@ import org.xml.sax.SAXParseException;
 public class SAXErrorHandler implements ErrorHandler {
 
     public SAXErrorHandler() {
+        // super();
     }
+
     public void error(SAXParseException ex) throws org.xml.sax.SAXException {
         System.err.println("[SAX Error] "+
             getLocationString(ex)+": "+

@@ -38,22 +38,24 @@ public class NamespaceMapping {
      * Register a new prefix mapping. Normally called by a content handler in
      * its <code>startPrefixMapping</code> method.
      *
-     * @param prefix
-     * @param uri
+     * @param nnPrefix
+     * @param nnUri
      */
     public void push(String prefix, String uri) {
-        if (null == prefix) {
-            prefix = "";
+        String nnPrefix = prefix;
+        String nnUri = uri;
+        if (null == nnPrefix) {
+            nnPrefix = "";
         }
-        if (null == uri) {
-            uri = "";
+        if (null == nnUri) {
+            nnUri = "";
         }
-        Stack stack = (Stack) prefixMap.get(prefix);
+        Stack stack = (Stack) prefixMap.get(nnPrefix);
         if (null == stack) {
             stack = new Stack();
-            prefixMap.put(prefix, stack);
+            prefixMap.put(nnPrefix, stack);
         }
-        stack.push(uri);
+        stack.push(nnUri);
     }
 
     /**
@@ -118,7 +120,7 @@ public class NamespaceMapping {
         while (it.hasNext()) {
             String prefix = (String) it.next();
             Stack stack = (Stack) prefixMap.get(prefix);
-            if (namespaceURI.equals((String) stack.peek())) { return prefix; }
+            if (namespaceURI.equals(stack.peek())) { return prefix; }
         }
         return null;
     }
@@ -157,7 +159,7 @@ public class NamespaceMapping {
         while (it.hasNext()) {
             String prefix = (String) it.next();
             Stack stack = (Stack) prefixMap.get(prefix);
-            if (namespaceURI.equals((String) stack.peek())) {
+            if (namespaceURI.equals(stack.peek())) {
                 prefixes.add(prefix);
             }
         }

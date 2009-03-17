@@ -40,7 +40,7 @@ public class BaseDh extends DefaultHandler {
 
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("startElement(''{0}'', ''{1}'', ''{2}'', attributes)",
-                    (Object[]) new String[] { uri, localName, qName }));
+                    new String[] { uri, localName, qName }));
         }
 
         ElementProcessor oldProcessor;
@@ -78,7 +78,7 @@ public class BaseDh extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("endElement(''{0}'', ''{1}'', ''{2}'')",
-                    (Object[]) new String[] { uri, localName, qName }));
+                    new String[] { uri, localName, qName }));
         }
 
         ElementProcessor processor = (ElementProcessor) processorStack.pop();
@@ -116,7 +116,7 @@ public class BaseDh extends DefaultHandler {
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("startPrefixMapping(''{0}'', ''{1}'')",
-                    (Object[]) new String[] { prefix, uri }));
+                    new String[] { prefix, uri }));
         }
         cachedStartPrefixMappings.add(new String[] { prefix, uri });
     }
@@ -124,7 +124,7 @@ public class BaseDh extends DefaultHandler {
     public void endPrefixMapping(java.lang.String prefix) throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("endPrefixMapping(''{0}'')",
-                    (Object[]) new String[] { prefix }));
+                    new String[] { prefix }));
         }
         if (null != lastProcessor) {
             lastProcessor.endPrefixMapping(prefix);
