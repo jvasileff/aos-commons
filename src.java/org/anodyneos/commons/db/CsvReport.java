@@ -19,6 +19,7 @@ public class CsvReport {
 
     private static java.text.SimpleDateFormat isof;
     static {
+        // FIXME: is SimpleDateFormat thread safe?
         isof = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         isof.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
     }
