@@ -122,6 +122,13 @@
                 <patternset refid="pattern.resources"/>
             </fileset>
         </copy>
+
+        <!-- log4j -->
+        <copy toDir="${dir.build.classes}">
+            <fileset dir=".">
+                <include name="log4j.properties"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="compile.common" depends="compileJava"/>
@@ -139,6 +146,7 @@
             <fileset dir="${dir.build.classes}">
                 <patternset refid="pattern.resources"/>
                 <include name="**/*.class"/>
+                <exclude name="log4j.properties"/>
             </fileset>
         </jar>
         <zip zipfile="${file.src.zip}" compress="no">
