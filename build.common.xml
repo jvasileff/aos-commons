@@ -6,7 +6,8 @@
 **
 *****************************************************************************-->
 
-<project name="aos-common" default="compile" basedir=".">
+<project name="aos-common" default="compile" basedir="."
+    xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
     <!-- setup -->
     <property name="build.sysclasspath"         value="ignore"/>
@@ -45,6 +46,9 @@
         <pathelement location="${dir.src.java}"/>
         <pathelement location="${dir.build.java}"/>
     </path>
+
+    <!-- Maven tasks for ant -->
+    <typedef uri="antlib:org.apache.maven.artifact.ant" classpath="antlib/maven-ant-tasks-2.0.10.jar"  resource="org/apache/maven/artifact/ant/antlib.xml"/>
 
     <!--++++++++++++++++++++++++++++++++++++
     ++
@@ -109,7 +113,7 @@
                 debug="${compile.debug}"
                 debuglevel="${compile.debuglevel}">
             <src refid="path.source"/>
-            <classpath refid="path.compile"/>
+            <classpath refid="path.dependencies.compile"/>
         </javac>
 
         <!-- resources -->
@@ -152,6 +156,15 @@
     </target>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  Maven
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <target name="install" depends="jar" description="Installs the jar/war/sources to your local maven repo">
+        <artifact:install pomRefId="pom.main" file="${file.jar}">
+            <attach file="${file.src.zip}" classifier="sources"/>
+        </artifact:install>
+    </target>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  apidocs
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
@@ -161,7 +174,7 @@
                     author="true"
                     version="true"
                     group="true" >
-            <classpath refid="path.compile"/>
+            <classpath refid="path.dependencies.compile"/>
             <sourcepath refid="path.source"/>
         </javadoc>
     </target>
