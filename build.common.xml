@@ -166,10 +166,18 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  Maven
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <target name="install" depends="jar" description="Installs the jar/war/sources to your local maven repo">
+    <target name="install" depends="jar" description="Installs the jar, war, and sources to your local maven repo">
         <artifact:install pomRefId="pom.main" file="${file.jar}">
             <attach file="${file.src.zip}" classifier="sources"/>
         </artifact:install>
+    </target>
+    <target name="deploy" depends="jar" description="Deploys the jar, war, and sources to the remote maven repo">
+        <artifact:deploy pomRefId="pom.main" file="${file.jar}">
+            <remoteRepository
+                id="${mvn.deploy.remoteRepository.id}"
+                url="${mvn.deploy.remoteRepository.url}"/>
+            <attach file="${file.src.zip}" classifier="sources"/>
+        </artifact:deploy>
     </target>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

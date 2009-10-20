@@ -1,3 +1,6 @@
-compile.deprecation:off
-compile.debug:true
-compile.debuglevel:lines,source,vars
+#mvn.deploy.remoteRepository.id:
+#mvn.deploy.remoteRepository.url:
+
+#compile.deprecation:off
+#compile.debug:true
+#compile.debuglevel:lines,source,vars
