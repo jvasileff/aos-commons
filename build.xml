@@ -6,12 +6,21 @@
 **
 *****************************************************************************-->
 
-<project name="anodyneos-commons" default="compile" basedir=".">
+<project name="anodyneos-commons" default="compile" basedir="."
+        xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~  setup and defaults
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <property file="build.properties"/>
 
     <property name="compile.source" value="1.4"/>
     <property name="compile.target" value="1.4"/>
+
+    <!-- defaults, override in build.properties if desired -->
+    <property name="compile.deprecation" value="off"/>
+    <property name="compile.debug" value="true"/>
+    <property name="compile.debuglevel" value="lines,source,vars"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  common
@@ -21,22 +30,26 @@
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  required jars
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <property name="resolver.jar" location="${dir.jars}/xml-commons-resolver-1.2/resolver.jar"/>
-    <property name="commons-logging-1.1.1.jar" location="${dir.jars}/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
 
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ~~  prepare.post
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <target name="prepare.post">
-        <!-- ide.lib -->
-        <copy toDir="${dir.build.ide.lib}" file="${resolver.jar}"/>
-        <copy toDir="${dir.build.ide.lib}" file="${commons-logging-1.1.1.jar}"/>
+        <!-- dependencies -->
+        <artifact:pom id="pom.main" file="pom.xml"/>
+        <artifact:dependencies usescope="compile" filesetId="fs.dependencies.compile" pomrefid="pom.main"/>
+        <artifact:dependencies usescope="test" filesetId="fs.dependencies.test" pomrefid="pom.main"/>
+        <artifact:dependencies usescope="runtime" filesetId="fs.dependencies.runtime" pomrefid="pom.main"/>
 
         <!-- paths -->
-        <path id="path.compile">
-            <fileset id="fs.lib" dir="${dir.build.ide.lib}">
-                <include name="*.jar"/>
-            </fileset>
+        <path id="path.dependencies.compile">
+            <!--<fileset dir="${dir.build.ide.lib}" includes="*.jar"/>-->
+            <fileset refid="fs.dependencies.compile"/>
+        </path>
+
+        <path id="path.dependencies.runtime">
+            <!--<fileset dir="${dir.build.ide.lib}" includes="*.jar"/>-->
+            <fileset refid="fs.dependencies.runtime"/>
         </path>
     </target>
 
