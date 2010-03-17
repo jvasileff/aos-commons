@@ -1,2 +1,4 @@
 /build/
+/target/
 /build.properties
+/log4j.properties
