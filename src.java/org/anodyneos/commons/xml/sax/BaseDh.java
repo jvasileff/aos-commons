@@ -19,7 +19,7 @@ public class BaseDh extends DefaultHandler {
 
     protected BaseContext ctx;
     private ElementProcessor topProcessor;
-    private Stack processorStack = new Stack();
+    private Stack<ElementProcessor> processorStack = new Stack<ElementProcessor>();
 
     /**
      *  endPrefixMapping() calls are made after endElement() pops the processorStack
@@ -28,7 +28,7 @@ public class BaseDh extends DefaultHandler {
     private ElementProcessor lastProcessor;
 
     /** map keys are prefixes, values are namespace URIs */
-    private List cachedStartPrefixMappings = new ArrayList();
+    private List<String[]> cachedStartPrefixMappings = new ArrayList<String[]>();
 
     public BaseDh (ElementProcessor topProcessor) {
         this.topProcessor = topProcessor;
@@ -49,14 +49,14 @@ public class BaseDh extends DefaultHandler {
         if (processorStack.empty()) {
             newProcessor = topProcessor;
         } else {
-            oldProcessor = ((ElementProcessor) processorStack.peek());
+            oldProcessor = processorStack.peek();
             newProcessor = oldProcessor.getProcessorFor(uri, localName, qName, attributes);
         }
         processorStack.push(newProcessor);
 
         ctx.getNamespaceSupport().pushContext();
-        for (Iterator it = cachedStartPrefixMappings.iterator(); it.hasNext();) {
-            String[] mapping = (String[]) it.next();
+        for (Iterator<String[]> it = cachedStartPrefixMappings.iterator(); it.hasNext();) {
+            String[] mapping = it.next();
             ctx.getNamespaceSupport().declarePrefix(mapping[0], mapping[1]);
             newProcessor.startPrefixMapping(mapping[0], mapping[1]);
         }
@@ -81,7 +81,7 @@ public class BaseDh extends DefaultHandler {
                     new String[] { uri, localName, qName }));
         }
 
-        ElementProcessor processor = (ElementProcessor) processorStack.pop();
+        ElementProcessor processor = processorStack.pop();
         processor.endElement(uri, localName, qName);
         // NOTE: we are popping the context even though calls may be made to endPrefixMapping()
         ctx.getNamespaceSupport().popContext();
@@ -90,7 +90,7 @@ public class BaseDh extends DefaultHandler {
     }
 
     public void characters(char[] chars, int start, int length) throws SAXException {
-        ElementProcessor processor = (ElementProcessor) processorStack.peek();
+        ElementProcessor processor = processorStack.peek();
         processor.characters(chars, start, length);
     }
 

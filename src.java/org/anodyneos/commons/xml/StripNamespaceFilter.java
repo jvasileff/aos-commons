@@ -41,7 +41,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
     private NamespaceMapping mappings;
     private NamespaceMapping defaultNSPrefixes;
 
-    private Set namespacesToStrip = new HashSet();
+    private Set<String> namespacesToStrip = new HashSet<String>();
     private int bigNum = (int) Math.pow(36, 3);
 
     /**

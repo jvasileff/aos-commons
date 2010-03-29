@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 public class UnifiedResolver extends URIHelper implements EntityResolver, URIResolver  {
 
     private boolean defaultLookupEnabled;
-    private HashMap protocolHandlers = new HashMap();
+    private HashMap<String, URIHandler> protocolHandlers = new HashMap<String, URIHandler>();
     private CatalogManager catalogManager = null;
     private Catalog catalog = null;
 
@@ -146,7 +146,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     }
 
     protected synchronized URIHandler getURIHandler(URI uri) {
-        return (URIHandler) protocolHandlers.get(uri.getScheme());
+        return protocolHandlers.get(uri.getScheme());
     }
 
     public synchronized void addProtocolHandler(String protocol, URIHandler uriHandler) {

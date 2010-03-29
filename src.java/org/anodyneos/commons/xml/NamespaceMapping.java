@@ -28,7 +28,7 @@ public class NamespaceMapping {
      * Keys are prefix names, values are a stack of URIs with the top of the
      * stack representing the current mapping.
      */
-    private HashMap prefixMap = new HashMap();
+    private HashMap<String, Stack<String>> prefixMap = new HashMap<String, Stack<String>>();
 
     public NamespaceMapping() {
         super();
@@ -50,9 +50,9 @@ public class NamespaceMapping {
         if (null == nnUri) {
             nnUri = "";
         }
-        Stack stack = (Stack) prefixMap.get(nnPrefix);
+        Stack<String> stack = prefixMap.get(nnPrefix);
         if (null == stack) {
-            stack = new Stack();
+            stack = new Stack<String>();
             prefixMap.put(nnPrefix, stack);
         }
         stack.push(nnUri);
@@ -66,7 +66,7 @@ public class NamespaceMapping {
      * @return the namespace uri being popped.
      */
     public String pop(String prefix) {
-        Stack stack = (Stack) prefixMap.get(prefix);
+        Stack stack = prefixMap.get(prefix);
         if (null == stack) {
             return "";
         } else {
@@ -85,7 +85,7 @@ public class NamespaceMapping {
      * @return The namespace uri
      */
     public String getNamespaceURI(String prefix) {
-        Stack stack = (Stack) prefixMap.get(prefix);
+        Stack stack = prefixMap.get(prefix);
         if (null == stack) {
             return "";
         } else {
@@ -116,10 +116,10 @@ public class NamespaceMapping {
      * @return The prefix to use for the uri or null if none exists.
      */
     public String getPrefix(String namespaceURI) {
-        Iterator it = prefixMap.keySet().iterator();
+        Iterator<String> it = prefixMap.keySet().iterator();
         while (it.hasNext()) {
-            String prefix = (String) it.next();
-            Stack stack = (Stack) prefixMap.get(prefix);
+            String prefix = it.next();
+            Stack stack = prefixMap.get(prefix);
             if (namespaceURI.equals(stack.peek())) { return prefix; }
         }
         return null;
@@ -132,7 +132,7 @@ public class NamespaceMapping {
      */
     public Iterator getPrefixes() {
         return new Iterator() {
-            Iterator keys = prefixMap.keySet().iterator();
+            Iterator<String> keys = prefixMap.keySet().iterator();
             public boolean hasNext() {
                 return keys.hasNext();
             }
@@ -153,19 +153,19 @@ public class NamespaceMapping {
      * @return the Iterator
      */
     public Iterator getPrefixes(String namespaceURI) {
-        final Set prefixes = new HashSet();
+        final Set<String> prefixes = new HashSet<String>();
 
-        Iterator it = prefixMap.keySet().iterator();
+        Iterator<String> it = prefixMap.keySet().iterator();
         while (it.hasNext()) {
-            String prefix = (String) it.next();
-            Stack stack = (Stack) prefixMap.get(prefix);
+            String prefix = it.next();
+            Stack stack = prefixMap.get(prefix);
             if (namespaceURI.equals(stack.peek())) {
                 prefixes.add(prefix);
             }
         }
 
         return new Iterator() {
-            Iterator values = prefixes.iterator();
+            Iterator<String> values = prefixes.iterator();
             public boolean hasNext() {
                 return values.hasNext();
             }

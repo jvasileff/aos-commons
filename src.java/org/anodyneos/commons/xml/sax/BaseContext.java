@@ -13,7 +13,7 @@ public class BaseContext {
     private InputSource inputSource;
     private Locator locator;
     private NamespaceSupport namespaceSupport = new NamespaceSupport();
-    private Stack xmlSpacePreserve = new Stack();
+    private Stack<Boolean> xmlSpacePreserve = new Stack<Boolean>();
 
     public BaseContext(InputSource inputSource) {
         this.inputSource = inputSource;
@@ -61,7 +61,7 @@ public class BaseContext {
         if (xmlSpacePreserve.empty()) {
             return false;
         } else {
-            return ((Boolean)xmlSpacePreserve.peek()).booleanValue();
+            return xmlSpacePreserve.peek().booleanValue();
         }
     }
 

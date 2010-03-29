@@ -567,7 +567,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
     }
 
     private final class Cache {
-        private HashMap map = new HashMap();
+        private HashMap<String, Entry> map = new HashMap<String, Entry>();
         Cache() {
             // super();
         }
@@ -578,7 +578,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
         }
         Entry get(String systemId) {
             if (cacheEnabled && systemId != null && ! "".equals(systemId)) {
-                return (Entry) map.get(systemId);
+                return map.get(systemId);
             } else {
                 return null;
             }
