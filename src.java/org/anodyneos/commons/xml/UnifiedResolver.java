@@ -153,7 +153,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
         protocolHandlers.put(protocol, uriHandler);
     }
 
-    public synchronized void setProtocolHandlers(HashMap handlers) {
+    public synchronized void setProtocolHandlers(HashMap<String, URIHandler> handlers) {
         protocolHandlers.clear();
         protocolHandlers.putAll(handlers);
     }
