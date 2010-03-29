@@ -47,6 +47,7 @@ public class URLChangeRootURIHandler extends AbstractURIHandler implements URIHa
      *
      *  @return The URL or null.
      */
+    @Override
     public URL toURL(URI uri) {
         if (null == rootURI) {
             return  null;

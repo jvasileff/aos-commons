@@ -76,6 +76,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void startDocument() throws SAXException {
         if(logger.isDebugEnabled()) { logger.debug("recv: startDocument()"); }
         mappings = new NamespaceMapping();
@@ -84,6 +85,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         super.startDocument();
     }
 
+    @Override
     public void endDocument() throws SAXException {
         if(logger.isDebugEnabled()) { logger.debug("recv: endDocument()"); }
         mappings = null;
@@ -135,6 +137,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if(logger.isDebugEnabled()) {
             logger.debug("recv: endElement(" + uri + ", " + localName + ", " + qName + ")");
@@ -185,6 +188,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void endPrefixMapping(String prefix) throws SAXException {
         if(logger.isDebugEnabled()) { logger.debug("recv: endPrefixMapping(" + prefix + ")"); }
         /*
@@ -220,6 +224,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         mappings.pop(prefix);
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes attrs)
             throws SAXException {
         if(logger.isDebugEnabled()) {
@@ -272,6 +277,7 @@ public class StripNamespaceFilter extends XMLFilterImpl {
         }
     }
 
+    @Override
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         if (logger.isDebugEnabled()) { logger.debug("recv: startPrefixMapping(" + prefix + ", " + uri + ")"); }
         /*

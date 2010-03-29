@@ -10,6 +10,7 @@ public final class BooleanProcessor extends CDATAProcessor {
         super(ctx);
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
         String contents = getCDATA();

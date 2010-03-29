@@ -8,10 +8,12 @@ public class NullProcessor extends ElementProcessor {
         super(ctx);
     }
 
+    @Override
     public ElementProcessor getProcessorFor(String uri, String localName, String qName) throws SAXException {
         return this;
     }
 
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         /* no op */
     }

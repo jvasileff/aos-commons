@@ -35,6 +35,7 @@ public class BaseDh extends DefaultHandler {
         this.ctx = topProcessor.getContext();
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
 
@@ -75,6 +76,7 @@ public class BaseDh extends DefaultHandler {
         newProcessor.startElement(uri, localName, qName, attributes);
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("endElement(''{0}'', ''{1}'', ''{2}'')", uri, localName, qName));
@@ -88,23 +90,27 @@ public class BaseDh extends DefaultHandler {
         lastProcessor = processor;
     }
 
+    @Override
     public void characters(char[] chars, int start, int length) throws SAXException {
         ElementProcessor processor = processorStack.peek();
         processor.characters(chars, start, length);
     }
 
+    @Override
     public void startDocument() throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug("startDocument()");
         }
     }
 
+    @Override
     public void endDocument() throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug("endDocument()");
         }
     }
 
+    @Override
     public void setDocumentLocator(Locator locator) {
         if (log.isDebugEnabled()) {
             log.debug("setDocumentLocator(locator)");
@@ -112,6 +118,7 @@ public class BaseDh extends DefaultHandler {
         ctx.setLocator(locator);
     }
 
+    @Override
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("startPrefixMapping(''{0}'', ''{1}'')", prefix, uri));
@@ -119,6 +126,7 @@ public class BaseDh extends DefaultHandler {
         cachedStartPrefixMappings.add(new String[] { prefix, uri });
     }
 
+    @Override
     public void endPrefixMapping(java.lang.String prefix) throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("endPrefixMapping(''{0}'')", prefix));
