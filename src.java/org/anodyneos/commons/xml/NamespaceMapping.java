@@ -133,12 +133,15 @@ public class NamespaceMapping {
     public Iterator<String> getPrefixes() {
         return new Iterator<String>() {
             Iterator<String> keys = prefixMap.keySet().iterator();
+            @Override
             public boolean hasNext() {
                 return keys.hasNext();
             }
+            @Override
             public String next() {
                 return keys.next();
             }
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException("This iterator is not modifiable.");
             }
@@ -166,12 +169,15 @@ public class NamespaceMapping {
 
         return new Iterator<String>() {
             Iterator<String> values = prefixes.iterator();
+            @Override
             public boolean hasNext() {
                 return values.hasNext();
             }
+            @Override
             public String next() {
                 return values.next();
             }
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException("This iterator is not modifiable.");
             }

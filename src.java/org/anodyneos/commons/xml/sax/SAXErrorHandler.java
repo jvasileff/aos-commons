@@ -18,18 +18,21 @@ public class SAXErrorHandler implements ErrorHandler {
         // super();
     }
 
+    @Override
     public void error(SAXParseException ex) throws org.xml.sax.SAXException {
         System.err.println("[SAX Error] "+
             getLocationString(ex)+": "+
             ex.getMessage());
         //throw ex;
     }
+    @Override
     public void fatalError(SAXParseException ex) throws org.xml.sax.SAXException {
         System.err.println("[SAX Fatal Error] "+
             getLocationString(ex)+": "+
             ex.getMessage());
         throw ex;
     }
+    @Override
     public void warning(SAXParseException ex) throws org.xml.sax.SAXException {
         System.err.println("[SAX Warning] "+
             getLocationString(ex)+": "+

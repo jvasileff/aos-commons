@@ -97,6 +97,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
      *
      * @param tFactory The TransformerFactory to reconfigure and use.
      */
+    @Override
     public void setTransformerFactory(TransformerFactory tFactory) {
         if (null != resolver) {
             tFactory.setURIResolver(resolver);
@@ -104,6 +105,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
         this.tFactory = tFactory;
     }
 
+    @Override
     public TransformerFactory getTransformerFactory() {
         return tFactory;
     }
@@ -114,55 +116,68 @@ public class TemplatesCacheImpl implements TemplatesCache {
      *
      * @param saxParserFactory The SAXParserFactory to reconfigure and use.
      */
+    @Override
     public void setSAXParserFactory(SAXParserFactory saxParserFactory) {
         saxParserFactory.setValidating(false);
         saxParserFactory.setNamespaceAware(true);
         this.saxParserFactory = saxParserFactory;
     }
 
+    @Override
     public SAXParserFactory getSAXParserFactory() {
         return saxParserFactory;
     }
 
+    @Override
     public void setUnifiedResolver(UnifiedResolver resolver) {
         this.resolver = resolver;
         tFactory.setURIResolver(resolver);
     }
 
+    @Override
     public UnifiedResolver getUnifiedResolver() {
         return resolver;
     }
 
+    @Override
     public void setErrorListener(ErrorListener errorListener) {
         this.errorListener = errorListener;
         tFactory.setErrorListener(errorListener);
     }
 
+    @Override
     public ErrorListener getErrorListener() {
         return errorListener;
     }
 
+    @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 
+    @Override
     public ErrorHandler getErrorHandler() {
         return errorHandler;
     }
 
+    @Override
     public void setCacheEnabled(boolean cacheEnabled) { this.cacheEnabled = cacheEnabled; }
+    @Override
     public boolean getCacheEnabled() { return this.cacheEnabled; }
 
 
     // CACHE MANAGEMENT
+    @Override
     public void clearCache() {
         cache.clear();
     }
+    @Override
     public int getCacheSize() {
         return cache.size();
     }
 
     // GET XML FILTER
+    @Override
     public XMLFilter getXMLFilter(Source source)
     throws TransformerConfigurationException, IOException {
         XMLFilter f = ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(source));
@@ -172,6 +187,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
         return f;
     }
 
+    @Override
     public XMLFilter getXMLFilter(URI uri)
     throws TransformerConfigurationException, IOException {
         XMLFilter f = ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(uri));
@@ -181,6 +197,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
         return f;
     }
 
+    @Override
     public XMLFilter getXMLFilter(URL url)
     throws TransformerConfigurationException, IOException {
         XMLFilter f = ((SAXTransformerFactory) tFactory).newXMLFilter(getTemplates(url));
@@ -191,27 +208,32 @@ public class TemplatesCacheImpl implements TemplatesCache {
     }
 
     // GET TRANSFORMER HANDLER
+    @Override
     public TransformerHandler getTransformerHandler()
     throws TransformerConfigurationException, IOException {
         return ((SAXTransformerFactory) tFactory).newTransformerHandler();
     }
 
+    @Override
     public TransformerHandler getTransformerHandler(Source source)
     throws TransformerConfigurationException, IOException {
         return ((SAXTransformerFactory) tFactory).newTransformerHandler(getTemplates(source));
     }
 
+    @Override
     public TransformerHandler getTransformerHandler(URI uri)
     throws TransformerConfigurationException, IOException {
         return ((SAXTransformerFactory) tFactory).newTransformerHandler(getTemplates(uri));
     }
 
+    @Override
     public TransformerHandler getTransformerHandler(URL url)
     throws TransformerConfigurationException, IOException {
         return ((SAXTransformerFactory) tFactory).newTransformerHandler(getTemplates(url));
     }
 
     // GET TRANSFORMER
+    @Override
     public Transformer getTransformer() throws TransformerConfigurationException {
         Transformer t =  tFactory.newTransformer();
         if (null != errorListener) {
@@ -221,6 +243,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
         return t;
     }
 
+    @Override
     public Transformer getTransformer(Source source)
     throws TransformerConfigurationException, IOException {
         Transformer t = getTemplates(source).newTransformer();
@@ -236,6 +259,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
      *  @exception IOException
      *  @exception TransformerConfigurationException
      */
+    @Override
     public Transformer getTransformer(URI uri)
     throws TransformerConfigurationException, IOException {
         Transformer t = getTemplates(uri).newTransformer();
@@ -251,6 +275,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
      *  @exception IOException
      *  @exception TransformerConfigurationException
      */
+    @Override
     public Transformer getTransformer(URL url)
     throws TransformerConfigurationException, IOException {
         Transformer t = getTemplates(url).newTransformer();

@@ -62,6 +62,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     }
 
     // SAX EntityResolver
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
     throws org.xml.sax.SAXException, IOException {
 
@@ -100,6 +101,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     }
 
     // trax URIResolver
+    @Override
     public Source resolve(String href, String base) throws javax.xml.transform.TransformerException {
         URI uri;
         try {
