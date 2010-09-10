@@ -21,6 +21,7 @@ public class ElementProcessor extends org.xml.sax.helpers.DefaultHandler {
         throw new SAXParseException("Element not allowed here: <" + qName + ">;", getContext().getLocator());
     }
 
+    @Override
     public final void setDocumentLocator(Locator locator) {
         // should get the locator from the context
     }
@@ -28,6 +29,7 @@ public class ElementProcessor extends org.xml.sax.helpers.DefaultHandler {
         return ctx.getLocator();
     }
 
+    @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         String s = new String(ch, start, length);
         if (s.trim().length() != 0) {

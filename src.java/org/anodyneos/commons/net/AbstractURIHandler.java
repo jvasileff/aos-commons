@@ -50,6 +50,7 @@ public abstract class AbstractURIHandler implements URIHandler {
      *  @return The URLConnection or null.
      *  @throws IOException if an IOException occurs
      */
+    @Override
     public URLConnection openConnection(URI uri) throws IOException {
         URL url = toURL(uri);
         if (null == url) {
@@ -69,6 +70,7 @@ public abstract class AbstractURIHandler implements URIHandler {
      *  @return The InputStream or null.
      *  @throws IOException if an IOException occurs
      */
+    @Override
     public InputStream openStream(URI uri) throws IOException {
         URL url = toURL(uri);
         if (null == url) {
@@ -88,6 +90,7 @@ public abstract class AbstractURIHandler implements URIHandler {
      *
      *  @return The URL or null.
      */
+    @Override
     public abstract URL toURL(URI uri);
 
 }

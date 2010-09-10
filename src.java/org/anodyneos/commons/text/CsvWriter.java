@@ -118,6 +118,7 @@ public class CsvWriter extends FilterWriter {
         super(out);
     }
 
+    @Override
     public void close() throws IOException {
         if (inQuotedField) {
             endField();
@@ -161,6 +162,7 @@ public class CsvWriter extends FilterWriter {
         fieldNum++;
     }
 
+    @Override
     public void write(int c) throws IOException {
         prepareQuotedField();
         if (lastWasNewline && c == '\r') {
@@ -176,6 +178,7 @@ public class CsvWriter extends FilterWriter {
         }
     }
 
+    @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         prepareQuotedField();
         boolean lwnl = lastWasNewline;
@@ -216,6 +219,7 @@ public class CsvWriter extends FilterWriter {
         lastWasNewline = lwnl;
     }
 
+    @Override
     public void write(String str, int off, int len) throws IOException {
         write(str.toCharArray(), off, len);
     }

@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 public class UnifiedResolver extends URIHelper implements EntityResolver, URIResolver  {
 
     private boolean defaultLookupEnabled;
-    private HashMap protocolHandlers = new HashMap();
+    private HashMap<String, URIHandler> protocolHandlers = new HashMap<String, URIHandler>();
     private CatalogManager catalogManager = null;
     private Catalog catalog = null;
 
@@ -62,6 +62,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     }
 
     // SAX EntityResolver
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
     throws org.xml.sax.SAXException, IOException {
 
@@ -100,6 +101,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     }
 
     // trax URIResolver
+    @Override
     public Source resolve(String href, String base) throws javax.xml.transform.TransformerException {
         URI uri;
         try {
@@ -145,15 +147,16 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
         return source;
     }
 
+    @Override
     protected synchronized URIHandler getURIHandler(URI uri) {
-        return (URIHandler) protocolHandlers.get(uri.getScheme());
+        return protocolHandlers.get(uri.getScheme());
     }
 
     public synchronized void addProtocolHandler(String protocol, URIHandler uriHandler) {
         protocolHandlers.put(protocol, uriHandler);
     }
 
-    public synchronized void setProtocolHandlers(HashMap handlers) {
+    public synchronized void setProtocolHandlers(HashMap<String, URIHandler> handlers) {
         protocolHandlers.clear();
         protocolHandlers.putAll(handlers);
     }
@@ -161,6 +164,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     /**
      * Override URIHelper.openStream() to provide support for XML Catalog.
      */
+    @Override
     public InputStream openStream(URI uri) throws IOException {
         return openStream(null, uri);
     }
@@ -168,6 +172,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     /**
      *  Override URIHelper.openConnection() to provide support for XML Catalog.
      */
+    @Override
     public URLConnection openConnection(URI uri) throws IOException {
         return openConnection(null, uri);
     }
@@ -175,6 +180,7 @@ public class UnifiedResolver extends URIHelper implements EntityResolver, URIRes
     /**
      * Override URIHelper.toURL() to provide support for XML Catalog.
      */
+    @Override
     public URL toURL(URI uri) {
         return toURL(null, uri);
     }

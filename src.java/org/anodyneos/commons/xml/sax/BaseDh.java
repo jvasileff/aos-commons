@@ -19,7 +19,7 @@ public class BaseDh extends DefaultHandler {
 
     protected BaseContext ctx;
     private ElementProcessor topProcessor;
-    private Stack processorStack = new Stack();
+    private Stack<ElementProcessor> processorStack = new Stack<ElementProcessor>();
 
     /**
      *  endPrefixMapping() calls are made after endElement() pops the processorStack
@@ -28,19 +28,20 @@ public class BaseDh extends DefaultHandler {
     private ElementProcessor lastProcessor;
 
     /** map keys are prefixes, values are namespace URIs */
-    private List cachedStartPrefixMappings = new ArrayList();
+    private List<String[]> cachedStartPrefixMappings = new ArrayList<String[]>();
 
     public BaseDh (ElementProcessor topProcessor) {
         this.topProcessor = topProcessor;
         this.ctx = topProcessor.getContext();
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
 
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("startElement(''{0}'', ''{1}'', ''{2}'', attributes)",
-                    new String[] { uri, localName, qName }));
+                    uri, localName, qName ));
         }
 
         ElementProcessor oldProcessor;
@@ -49,14 +50,14 @@ public class BaseDh extends DefaultHandler {
         if (processorStack.empty()) {
             newProcessor = topProcessor;
         } else {
-            oldProcessor = ((ElementProcessor) processorStack.peek());
+            oldProcessor = processorStack.peek();
             newProcessor = oldProcessor.getProcessorFor(uri, localName, qName, attributes);
         }
         processorStack.push(newProcessor);
 
         ctx.getNamespaceSupport().pushContext();
-        for (Iterator it = cachedStartPrefixMappings.iterator(); it.hasNext();) {
-            String[] mapping = (String[]) it.next();
+        for (Iterator<String[]> it = cachedStartPrefixMappings.iterator(); it.hasNext();) {
+            String[] mapping = it.next();
             ctx.getNamespaceSupport().declarePrefix(mapping[0], mapping[1]);
             newProcessor.startPrefixMapping(mapping[0], mapping[1]);
         }
@@ -75,13 +76,13 @@ public class BaseDh extends DefaultHandler {
         newProcessor.startElement(uri, localName, qName, attributes);
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (log.isDebugEnabled()) {
-            log.debug(MessageFormat.format("endElement(''{0}'', ''{1}'', ''{2}'')",
-                    new String[] { uri, localName, qName }));
+            log.debug(MessageFormat.format("endElement(''{0}'', ''{1}'', ''{2}'')", uri, localName, qName));
         }
 
-        ElementProcessor processor = (ElementProcessor) processorStack.pop();
+        ElementProcessor processor = processorStack.pop();
         processor.endElement(uri, localName, qName);
         // NOTE: we are popping the context even though calls may be made to endPrefixMapping()
         ctx.getNamespaceSupport().popContext();
@@ -89,23 +90,27 @@ public class BaseDh extends DefaultHandler {
         lastProcessor = processor;
     }
 
+    @Override
     public void characters(char[] chars, int start, int length) throws SAXException {
-        ElementProcessor processor = (ElementProcessor) processorStack.peek();
+        ElementProcessor processor = processorStack.peek();
         processor.characters(chars, start, length);
     }
 
+    @Override
     public void startDocument() throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug("startDocument()");
         }
     }
 
+    @Override
     public void endDocument() throws SAXException {
         if (log.isDebugEnabled()) {
             log.debug("endDocument()");
         }
     }
 
+    @Override
     public void setDocumentLocator(Locator locator) {
         if (log.isDebugEnabled()) {
             log.debug("setDocumentLocator(locator)");
@@ -113,18 +118,18 @@ public class BaseDh extends DefaultHandler {
         ctx.setLocator(locator);
     }
 
+    @Override
     public void startPrefixMapping(java.lang.String prefix, java.lang.String uri) throws SAXException {
         if (log.isDebugEnabled()) {
-            log.debug(MessageFormat.format("startPrefixMapping(''{0}'', ''{1}'')",
-                    new String[] { prefix, uri }));
+            log.debug(MessageFormat.format("startPrefixMapping(''{0}'', ''{1}'')", prefix, uri));
         }
         cachedStartPrefixMappings.add(new String[] { prefix, uri });
     }
 
+    @Override
     public void endPrefixMapping(java.lang.String prefix) throws SAXException {
         if (log.isDebugEnabled()) {
-            log.debug(MessageFormat.format("endPrefixMapping(''{0}'')",
-                    new String[] { prefix }));
+            log.debug(MessageFormat.format("endPrefixMapping(''{0}'')", prefix));
         }
         if (null != lastProcessor) {
             lastProcessor.endPrefixMapping(prefix);

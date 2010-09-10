@@ -14,8 +14,8 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <property file="build.properties"/>
 
-    <property name="compile.source" value="1.4"/>
-    <property name="compile.target" value="1.4"/>
+    <property name="compile.source" value="1.6"/>
+    <property name="compile.target" value="1.6"/>
 
     <!-- defaults, override in build.properties if desired -->
     <property name="compile.deprecation" value="off"/>

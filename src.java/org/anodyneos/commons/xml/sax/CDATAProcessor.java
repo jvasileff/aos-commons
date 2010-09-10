@@ -14,11 +14,13 @@ public class CDATAProcessor extends ElementProcessor {
         super(ctx);
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName,
             Attributes attrs) throws SAXException {
         this.attributes = new AttributesImpl(attrs);
     }
 
+    @Override
     public void characters(char[] chars, int start, int length) {
         if (length > 0) {
             if (null == sb) {
@@ -31,6 +33,7 @@ public class CDATAProcessor extends ElementProcessor {
     /**
      * Subclasses that override this method must call super.endElement()
      */
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         endElement = true;
     }

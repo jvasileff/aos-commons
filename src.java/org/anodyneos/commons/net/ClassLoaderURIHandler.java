@@ -35,6 +35,7 @@ public class ClassLoaderURIHandler extends AbstractURIHandler implements URIHand
      *
      *  @return The URL or null.
      */
+    @Override
     public URL toURL(URI uri) {
         assert(uri.isOpaque());
         if (null == classLoader) {
