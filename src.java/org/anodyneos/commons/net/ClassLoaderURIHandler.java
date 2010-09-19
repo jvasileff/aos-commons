@@ -3,19 +3,24 @@ package org.anodyneos.commons.net;
 import java.net.URI;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
- * This class's toURL method resolves Opaque URIs of the form
- * "<i>classpath</i>:com/example/package/Resource"
- * to URLs for the give ClassLoader resource. The URI scheme specific part of
- * the URI should not include leading backslash characters.
+ * This class's toURL method resolves non-Opaque URIs of the form
+ * "<i>classpath</i>:///com/example/package/Resource" to URLs for the give
+ * ClassLoader resource. The scheme, authority, query, and fragment portions of
+ * the URI are disregarded. The URI should not include leading backslash
+ * characters.
  *
  * NOTE: The scheme "classpath" is only an example. This class is not scheme
  * specific and users of this class may use another scheme name.
  *
  * @author jvas
- *
  */
 public class ClassLoaderURIHandler extends AbstractURIHandler implements URIHandler {
+
+    private static final Log log = LogFactory.getLog(ClassLoaderURIHandler.class);
 
     private ClassLoader classLoader;
 
@@ -37,18 +42,28 @@ public class ClassLoaderURIHandler extends AbstractURIHandler implements URIHand
      */
     @Override
     public URL toURL(URI uri) {
-        assert(uri.isOpaque());
         if (null == classLoader) {
+            log.warn("Returning null; no classloader defined while processing URI: " + uri.toString());
             return null;
-        } else {
-            String path = uri.getSchemeSpecificPart();
-
-            if (null == path) {
-                return null;
-            } else {
-                return classLoader.getResource(path);
-            }
         }
+
+        if (uri.isOpaque()) {
+            log.warn("Returning null; opaque URI's (scheme-specific part does not begin with a slash) are invalid: "
+                    + uri.toString());
+            return null;
+        }
+
+        String path = uri.getPath();
+
+        // non-opaque, path will never be null
+        if (! path.startsWith("/")) {
+            // non-opaque URI's may have paths without a leading "/" if they have no scheme.
+            log.warn("Returning null; path for URI is not absolute: " + uri.toString());
+            return null;
+        }
+
+        // strip off leading '/'
+        return classLoader.getResource(path.substring(1));
     }
 
     public ClassLoader getClassLoader() { return classLoader; }
