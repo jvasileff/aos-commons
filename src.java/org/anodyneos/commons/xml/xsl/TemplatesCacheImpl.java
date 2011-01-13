@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -300,7 +301,7 @@ public class TemplatesCacheImpl implements TemplatesCache {
         InputStream is = null;
         try {
             if(url.getProtocol().equals("file")) {
-                File resourceFile = new File(url.getFile());
+                File resourceFile = new File(URLDecoder.decode(url.getFile(), "UTF-8"));
                 long lastModified = resourceFile.lastModified();
                 if (null == oldEntry || (lastModified > oldEntry.lastModified)) {
                     is = new FileInputStream(resourceFile);
